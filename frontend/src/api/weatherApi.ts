@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import type {
-  HealthResponse,
+  EnvironmentalInsights,
   ObservationHistoryResponse,
   PredictionResponse,
   WeatherObservation,
@@ -15,13 +15,13 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
-  const response = await apiClient.get<HealthResponse>('/health', { signal })
+export async function getObservations(signal?: AbortSignal): Promise<ObservationHistoryResponse> {
+  const response = await apiClient.get<ObservationHistoryResponse>('/api/observations', { signal })
   return response.data
 }
 
-export async function getObservations(signal?: AbortSignal): Promise<ObservationHistoryResponse> {
-  const response = await apiClient.get<ObservationHistoryResponse>('/api/observations', { signal })
+export async function getEnvironment(signal?: AbortSignal): Promise<EnvironmentalInsights> {
+  const response = await apiClient.get<EnvironmentalInsights>('/api/environment', { signal })
   return response.data
 }
 

@@ -1,17 +1,17 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import {
   getApiErrorMessage,
-  getHealth,
+  getEnvironment,
   getObservations,
   getPrediction,
-  isBackendUnavailable,
 } from './api/weatherApi'
-import { CurrentWeatherCard } from './components/CurrentWeatherCard'
 import { ErrorMessage } from './components/ErrorMessage'
+import { EnvironmentalInsights } from './components/EnvironmentalInsights'
 import { ForecastCard } from './components/ForecastCard'
+import { HourlyForecastStrip } from './components/HourlyForecastStrip'
 import { LoadingState } from './components/LoadingState'
-import { WeatherInputForm } from './components/WeatherInputForm'
-import type { ConnectionStatus, PredictionResponse, WeatherObservation } from './types'
+import { WeatherScene } from './components/WeatherScene'
+import type { DailyForecast, EnvironmentalInsights as EnvironmentalInsightsData, HourlyForecast, PredictionResponse, WeatherObservation } from './types'
 import './App.css'
 
 const TemperatureChart = lazy(() =>
@@ -27,29 +27,19 @@ function formatGeneratedAt(value: string): string {
 
 export function App() {
   const [observations, setObservations] = useState<WeatherObservation[]>([])
+  const [dailyForecasts, setDailyForecasts] = useState<DailyForecast[]>([])
+  const [hourlyForecasts, setHourlyForecasts] = useState<HourlyForecast[]>([])
+  const [environment, setEnvironment] = useState<EnvironmentalInsightsData | null>(null)
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null)
-  const [connection, setConnection] = useState<ConnectionStatus>('checking')
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStage, setLoadingStage] = useState<'history' | 'forecast'>('history')
-  const [source, setSource] = useState('')
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    const controller = new AbortController()
-    getHealth(controller.signal)
-      .then(() => setConnection('online'))
-      .catch(() => {
-        if (!controller.signal.aborted) setConnection('offline')
-      })
-    return () => controller.abort()
-  }, [])
 
   async function predictWithHistory(history: WeatherObservation[], signal?: AbortSignal) {
     setLoadingStage('forecast')
     const response = await getPrediction(history, signal)
     if (!response.forecasts.length) throw new Error('The backend returned an empty forecast.')
     setPrediction(response)
-    setConnection('online')
   }
 
   async function loadWeatherHistory(signal?: AbortSignal) {
@@ -59,12 +49,19 @@ export function App() {
     try {
       const response = await getObservations(signal)
       setObservations(response.observations)
-      setSource(response.source)
+      setDailyForecasts(response.daily_forecasts)
+      setHourlyForecasts(response.hourly_forecasts)
+      void getEnvironment(signal)
+        .then((environmentResponse) => {
+          if (!signal?.aborted) setEnvironment(environmentResponse)
+        })
+        .catch(() => {
+          if (!signal?.aborted) setEnvironment(null)
+        })
       await predictWithHistory(response.observations, signal)
     } catch (requestError) {
       if (signal?.aborted) return
       setError(getApiErrorMessage(requestError))
-      setConnection(isBackendUnavailable(requestError) ? 'offline' : 'online')
     } finally {
       if (!signal?.aborted) setIsLoading(false)
     }
@@ -76,21 +73,6 @@ export function App() {
     return () => controller.abort()
   }, [])
 
-  function loadDeveloperHistory(history: WeatherObservation[]) {
-    const sorted = [...history].sort((left, right) => Date.parse(left.timestamp) - Date.parse(right.timestamp))
-    setObservations(sorted)
-    setPrediction(null)
-    setSource('Developer JSON')
-    setError('')
-    setIsLoading(true)
-    void predictWithHistory(sorted)
-      .catch((requestError: unknown) => {
-        setError(getApiErrorMessage(requestError))
-        setConnection(isBackendUnavailable(requestError) ? 'offline' : 'online')
-      })
-      .finally(() => setIsLoading(false))
-  }
-
   const currentObservation = observations.at(-1)
 
   return (
@@ -100,10 +82,6 @@ export function App() {
           <span className="brand-mark"><span /></span>
           <span>SkyCast <strong>AI</strong></span>
         </a>
-        <div className={`connection-status connection-${connection}`}>
-          <span />
-          {connection === 'checking' ? 'Checking backend' : connection === 'online' ? 'Backend connected' : 'Backend unavailable'}
-        </div>
       </header>
 
       <main id="top">
@@ -118,18 +96,11 @@ export function App() {
           </div>
         </section>
 
-        <section className="input-layout">
-          <WeatherInputForm
-            observation={currentObservation}
-            observationCount={observations.length}
-            isLoading={isLoading}
-            source={source}
-            onHistoryLoaded={loadDeveloperHistory}
-          />
+        <section className="weather-overview">
           {currentObservation ? (
-            <CurrentWeatherCard observation={currentObservation} />
+            <WeatherScene observation={currentObservation} nextForecast={prediction?.forecasts[0]} />
           ) : (
-            <div className="panel weather-placeholder">Current conditions will appear after weather history loads.</div>
+            <div className="panel weather-placeholder">Live Bengaluru weather will appear here shortly.</div>
           )}
         </section>
 
@@ -141,25 +112,27 @@ export function App() {
           />
         ) : null}
 
-        {!isLoading && prediction ? (
+        {!isLoading && prediction && dailyForecasts.length ? (
           <section className="forecast-section" aria-live="polite">
+            {hourlyForecasts.length ? <HourlyForecastStrip forecasts={hourlyForecasts} /> : null}
             <div className="forecast-title-row">
-              <div><p className="eyebrow">Model ensemble</p><h2>Forecast horizons</h2></div>
-              <span>{prediction.location} · {prediction.forecasts.length} predictions</span>
+              <div><p className="eyebrow">Daily weather</p><h2>Six-day outlook</h2></div>
+              <span>Bengaluru · Open-Meteo forecast</span>
             </div>
             <div className="forecast-grid">
-              {prediction.forecasts.map((forecast) => <ForecastCard key={forecast.horizon_hours} forecast={forecast} />)}
+              {dailyForecasts.map((forecast) => <ForecastCard key={forecast.date} forecast={forecast} />)}
             </div>
             <div className="charts-grid">
               <Suspense fallback={<div className="chart-loading">Loading charts…</div>}>
                 <TemperatureChart forecasts={prediction.forecasts} />
-                <RainProbabilityChart forecasts={prediction.forecasts} />
+                <RainProbabilityChart forecasts={hourlyForecasts} />
               </Suspense>
             </div>
+            {environment ? <EnvironmentalInsights insight={environment} dailyForecast={dailyForecasts[0]} /> : null}
           </section>
         ) : null}
 
-        {!isLoading && !prediction && !error ? (
+        {!isLoading && !dailyForecasts.length && !error ? (
           <section className="empty-state">
             <span className="empty-orbit"><span /></span>
             <div><strong>Your forecast will appear here</strong><p>Live Bengaluru weather history is being loaded for an automatic four-horizon outlook.</p></div>
@@ -167,10 +140,22 @@ export function App() {
         ) : null}
       </main>
 
-      <footer>
-        <span>SkyCast AI · Bangalore</span>
-        <span>Temperature and rain forecasting research</span>
-        <span>Weather data provided by Open-Meteo.</span>
+      <footer className="site-footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <a className="footer-logo" href="#top">SkyCast <strong>AI</strong></a>
+            <p>Short-range weather intelligence for Bengaluru, India.</p>
+          </div>
+          <div className="footer-information">
+            <span>Temperature and rainfall forecasts</span>
+            <span>Research demonstration · Not for safety-critical decisions</span>
+          </div>
+          <div className="footer-source">
+            <span className="source-status"><i /> Live data source</span>
+            <span>Weather data provided by Open-Meteo.</span>
+          </div>
+          <p className="footer-copyright">&copy; 2026 SkyCast AI</p>
+        </div>
       </footer>
     </div>
   )

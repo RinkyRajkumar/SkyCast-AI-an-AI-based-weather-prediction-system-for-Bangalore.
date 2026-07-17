@@ -5,14 +5,14 @@ from __future__ import annotations
 import logging
 import math
 import time
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from threading import RLock
 from typing import Any, Callable
 
 import httpx
 
 from backend.app import config
-from backend.app.schemas import ObservationHistoryResponse, WeatherObservation
+from backend.app.schemas import DailyForecast, HourlyForecast, ObservationHistoryResponse, WeatherObservation
 from pydantic import ValidationError
 
 LOGGER = logging.getLogger(__name__)
@@ -62,7 +62,9 @@ class OpenMeteoObservationService:
             "timezone": config.TIMEZONE,
             "past_hours": config.OPEN_METEO_PAST_HOURS,
             "forecast_hours": config.OPEN_METEO_FORECAST_HOURS,
+            "forecast_days": config.OPEN_METEO_FORECAST_DAYS,
             "hourly": ",".join(config.OPEN_METEO_HOURLY_FIELDS),
+            "daily": ",".join(config.OPEN_METEO_DAILY_FIELDS),
         }
         last_error: Exception | None = None
         for attempt in range(self.retries):
@@ -169,9 +171,126 @@ class OpenMeteoObservationService:
 
         if observations != sorted(observations, key=lambda observation: observation.timestamp):
             raise OpenMeteoObservationError("Open-Meteo records are not sorted oldest to newest.")
+        hourly_forecasts = OpenMeteoObservationService._to_hourly_forecasts(hourly)
+        daily_forecasts = OpenMeteoObservationService._to_daily_forecasts(payload)
         return ObservationHistoryResponse(
             location=config.DISPLAY_LOCATION,
             source="Open-Meteo",
             latest_timestamp=observations[-1].timestamp,
             observations=observations,
+            hourly_forecasts=hourly_forecasts,
+            daily_forecasts=daily_forecasts,
         )
+
+    @staticmethod
+    def _to_hourly_forecasts(hourly: dict[str, Any]) -> list[HourlyForecast]:
+        """Translate the requested upcoming hours into dashboard forecast records."""
+        start_index = len(hourly["time"]) - config.OPEN_METEO_HOURLY_FORECAST_COUNT
+        if start_index < 0:
+            raise OpenMeteoObservationError("Open-Meteo returned too few hourly forecasts.")
+
+        forecasts: list[HourlyForecast] = []
+        for index in range(start_index, len(hourly["time"])):
+            try:
+                timestamp = datetime.fromisoformat(str(hourly["time"][index]).replace("Z", "+00:00"))
+                forecasts.append(
+                    HourlyForecast(
+                        timestamp=timestamp,
+                        temperature=float(hourly["temperature_2m"][index]),
+                        precipitation_probability=float(hourly["precipitation_probability"][index]),
+                        weather_code=int(hourly["weather_code"][index]),
+                    )
+                )
+            except (TypeError, ValueError, ValidationError) as exc:
+                raise OpenMeteoObservationError(
+                    f"Open-Meteo returned invalid hourly forecast values at record {index}."
+                ) from exc
+        return forecasts
+
+    @staticmethod
+    def _to_daily_forecasts(payload: dict[str, Any]) -> list[DailyForecast]:
+        """Convert Open-Meteo daily arrays into six validated forecast records."""
+        daily = payload.get("daily")
+        if not isinstance(daily, dict):
+            raise OpenMeteoObservationError("Open-Meteo response did not contain daily forecast data.")
+
+        columns = ("time", *config.OPEN_METEO_DAILY_FIELDS)
+        missing_columns = [column for column in columns if column not in daily]
+        if missing_columns:
+            raise OpenMeteoObservationError(
+                f"Open-Meteo response is missing daily fields: {', '.join(missing_columns)}."
+            )
+        if any(not isinstance(daily[column], list) for column in columns):
+            raise OpenMeteoObservationError("Open-Meteo daily fields must be arrays.")
+
+        record_count = len(daily["time"])
+        if record_count < config.OPEN_METEO_FORECAST_DAYS:
+            raise OpenMeteoObservationError(
+                f"Open-Meteo returned only {record_count} daily forecasts; at least "
+                f"{config.OPEN_METEO_FORECAST_DAYS} are required."
+            )
+        unequal = [column for column in columns if len(daily[column]) != record_count]
+        if unequal:
+            raise OpenMeteoObservationError(
+                f"Open-Meteo daily field lengths do not match: {', '.join(unequal)}."
+            )
+
+        forecasts: list[DailyForecast] = []
+        previous_date: date | None = None
+        for index in range(config.OPEN_METEO_FORECAST_DAYS):
+            values = {column: daily[column][index] for column in columns}
+            missing_values = [column for column, value in values.items() if value is None]
+            if missing_values:
+                raise OpenMeteoObservationError(
+                    "Open-Meteo returned missing daily values for "
+                    f"record {index}: {', '.join(missing_values)}."
+                )
+            numeric_fields = (
+                "weather_code",
+                "temperature_2m_max",
+                "temperature_2m_min",
+                "precipitation_probability_max",
+                "precipitation_sum",
+                "daylight_duration",
+            )
+            invalid_numeric = [
+                column
+                for column in numeric_fields
+                if not isinstance(values[column], (int, float))
+                or not math.isfinite(values[column])
+            ]
+            if invalid_numeric:
+                raise OpenMeteoObservationError(
+                    "Open-Meteo returned invalid daily values for "
+                    f"record {index}: {', '.join(invalid_numeric)}."
+                )
+            try:
+                forecast_date = date.fromisoformat(str(values["time"]))
+                sunrise = datetime.fromisoformat(str(values["sunrise"]).replace("Z", "+00:00"))
+                sunset = datetime.fromisoformat(str(values["sunset"]).replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise OpenMeteoObservationError(
+                    f"Open-Meteo returned an invalid daily date at record {index}."
+                ) from exc
+            if previous_date is not None and forecast_date - previous_date != timedelta(days=1):
+                raise OpenMeteoObservationError("Open-Meteo daily forecasts are not consecutive dates.")
+            previous_date = forecast_date
+            try:
+                forecasts.append(
+                    DailyForecast(
+                        date=forecast_date,
+                        weather_code=int(values["weather_code"]),
+                        temperature_max=float(values["temperature_2m_max"]),
+                        temperature_min=float(values["temperature_2m_min"]),
+                        precipitation_probability=float(values["precipitation_probability_max"]),
+                        precipitation_sum=float(values["precipitation_sum"]),
+                        sunrise=sunrise,
+                        sunset=sunset,
+                        daylight_duration_seconds=float(values["daylight_duration"]),
+                    )
+                )
+            except (TypeError, ValueError, ValidationError) as exc:
+                raise OpenMeteoObservationError(
+                    f"Open-Meteo returned invalid daily values at record {index}."
+                ) from exc
+        return forecasts

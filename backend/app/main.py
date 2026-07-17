@@ -8,11 +8,13 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app import config
+from backend.app.air_quality import OpenMeteoAirQualityService
 from backend.app.model_loader import ModelLoadError, ModelRegistry
 from backend.app.open_meteo import OpenMeteoObservationError, OpenMeteoObservationService
 from backend.app.prediction import ModelPredictionError, PredictionInputError, generate_prediction
 from backend.app.schemas import (
     HealthResponse,
+    EnvironmentalInsightsResponse,
     ModelsResponse,
     ObservationHistoryResponse,
     PredictionRequest,
@@ -41,9 +43,15 @@ def get_observation_service(request: Request) -> OpenMeteoObservationService:
     return request.app.state.observation_service
 
 
+def get_air_quality_service(request: Request) -> OpenMeteoAirQualityService:
+    """Resolve the app-scoped Open-Meteo air-quality service."""
+    return request.app.state.air_quality_service
+
+
 def create_app(
     model_registry: ModelRegistry | None = None,
     observation_service: OpenMeteoObservationService | None = None,
+    air_quality_service: OpenMeteoAirQualityService | None = None,
 ) -> FastAPI:
     """Create the API app, optionally with an injected registry for tests."""
     application = FastAPI(
@@ -53,6 +61,7 @@ def create_app(
     )
     application.state.model_registry = model_registry or ModelRegistry()
     application.state.observation_service = observation_service or OpenMeteoObservationService()
+    application.state.air_quality_service = air_quality_service or OpenMeteoAirQualityService()
     application.add_middleware(
         CORSMiddleware,
         allow_origins=config.CORS_ORIGINS,
@@ -89,6 +98,20 @@ def create_app(
             return service.fetch_observations()
         except OpenMeteoObservationError as exc:
             LOGGER.error("Could not obtain Open-Meteo observations: %s", exc)
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=str(exc),
+            ) from exc
+
+    @application.get("/api/environment", response_model=EnvironmentalInsightsResponse)
+    def environment(
+        service: OpenMeteoAirQualityService = Depends(get_air_quality_service),
+    ) -> EnvironmentalInsightsResponse:
+        """Return a cached, current air-quality and outdoor-dust summary for Bengaluru."""
+        try:
+            return service.fetch_environment()
+        except OpenMeteoObservationError as exc:
+            LOGGER.error("Could not obtain Open-Meteo air-quality data: %s", exc)
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail=str(exc),

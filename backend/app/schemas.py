@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
@@ -75,3 +75,46 @@ class ObservationHistoryResponse(BaseModel):
     source: str
     latest_timestamp: datetime
     observations: list[WeatherObservation] = Field(min_length=1)
+    hourly_forecasts: list["HourlyForecast"] = Field(min_length=1)
+    daily_forecasts: list["DailyForecast"] = Field(min_length=1)
+
+
+class HourlyForecast(BaseModel):
+    """One near-term Open-Meteo hourly outlook for the dashboard."""
+
+    timestamp: datetime
+    temperature: float = Field(ge=-80, le=60)
+    precipitation_probability: float = Field(ge=0, le=100)
+    weather_code: int = Field(ge=0)
+
+
+class DailyForecast(BaseModel):
+    """One Open-Meteo daily outlook used by the six-day dashboard list."""
+
+    date: date
+    weather_code: int = Field(ge=0)
+    temperature_max: float = Field(ge=-80, le=60)
+    temperature_min: float = Field(ge=-80, le=60)
+    precipitation_probability: float = Field(ge=0, le=100)
+    precipitation_sum: float = Field(ge=0)
+    sunrise: datetime
+    sunset: datetime
+    daylight_duration_seconds: float = Field(ge=0)
+
+
+class EnvironmentalInsightsResponse(BaseModel):
+    """Current air-quality and outdoor dust guidance for the dashboard."""
+
+    location: str
+    source: str
+    observed_at: datetime
+    us_aqi: int = Field(ge=0)
+    pm2_5: float = Field(ge=0)
+    pm10: float = Field(ge=0)
+    air_quality_label: str
+    air_quality_description: str
+    dust_outlook: str
+    dust_description: str
+    uv_index: float = Field(ge=0)
+    uv_label: str
+    uv_description: str

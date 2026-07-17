@@ -57,10 +57,13 @@ CORS_ALLOW_CREDENTIALS = os.getenv(
 ).lower() in {"1", "true", "yes"}
 
 OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
+OPEN_METEO_AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 OPEN_METEO_LATITUDE = 12.9716
 OPEN_METEO_LONGITUDE = 77.5946
 OPEN_METEO_PAST_HOURS = 168
-OPEN_METEO_FORECAST_HOURS = 1
+OPEN_METEO_FORECAST_HOURS = 24
+OPEN_METEO_HOURLY_FORECAST_COUNT = 24
+OPEN_METEO_FORECAST_DAYS = 6
 OPEN_METEO_CACHE_SECONDS = 60 * 60
 OPEN_METEO_TIMEOUT_SECONDS = float(os.getenv("SKYCAST_OPEN_METEO_TIMEOUT_SECONDS", "15"))
 OPEN_METEO_RETRIES = 3
@@ -78,4 +81,17 @@ OPEN_METEO_HOURLY_FIELDS = (
     "wind_direction_10m",
     "wind_gusts_10m",
     "weather_code",
+    "precipitation_probability",
 )
+OPEN_METEO_DAILY_FIELDS = (
+    "weather_code",
+    "temperature_2m_max",
+    "temperature_2m_min",
+    "precipitation_probability_max",
+    "precipitation_sum",
+    "sunrise",
+    "sunset",
+    "daylight_duration",
+)
+OPEN_METEO_AIR_QUALITY_FIELDS = ("us_aqi", "pm2_5", "pm10")
+OPEN_METEO_UV_FIELD = "uv_index"
