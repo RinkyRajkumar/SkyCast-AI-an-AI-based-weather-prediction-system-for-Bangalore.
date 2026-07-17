@@ -144,13 +144,14 @@ def test_cache_reuses_valid_open_meteo_response(monkeypatch: pytest.MonkeyPatch)
 
 
 class FakeObservationService:
-    def fetch_observations(self) -> ObservationHistoryResponse:
+    def fetch_observations(self, _location) -> ObservationHistoryResponse:  # type: ignore[no-untyped-def]
         observation = WeatherObservation(
             timestamp=datetime(2026, 7, 1), temperature=24, relative_humidity=70,
             precipitation=0, surface_pressure=920, cloud_cover=40, wind_speed=8, wind_direction=180,
         )
         return ObservationHistoryResponse(
-            location="Bengaluru, India", source="Open-Meteo", latest_timestamp=observation.timestamp,
+            location="Bengaluru, India", latitude=12.9716, longitude=77.5946, timezone="Asia/Kolkata",
+            model_supported=True, source="Open-Meteo", latest_timestamp=observation.timestamp,
             observations=[observation] * 169,
             hourly_forecasts=[
                 HourlyForecast(

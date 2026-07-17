@@ -6,6 +6,7 @@ describe('EnvironmentalInsights', () => {
   it('renders Open-Meteo air quality and dust guidance', () => {
     render(
       <EnvironmentalInsights
+        location={{ name: 'Bengaluru', country: 'India', latitude: 12.9716, longitude: 77.5946, timezone: 'Asia/Kolkata' }}
         insight={{
           location: 'Bengaluru, India',
           source: 'Open-Meteo Air Quality',
@@ -20,6 +21,10 @@ describe('EnvironmentalInsights', () => {
           uv_index: 2.4,
           uv_label: 'Low',
           uv_description: 'Minimal protection is needed for typical outdoor activity.',
+          pollen_available: true,
+          pollen_outlook: 'Pollen present',
+          pollen_description: 'Grass pollen is forecast over the next 24 hours.',
+          pollen_readings: [{ pollen_type: 'Grass', concentration: 12.4 }],
         }}
       />,
     )
@@ -29,5 +34,7 @@ describe('EnvironmentalInsights', () => {
     expect(screen.getAllByText('Low')).toHaveLength(2)
     expect(screen.getByText('Current UV index')).toBeInTheDocument()
     expect(screen.getByLabelText('UV index 2.4, Low')).toBeInTheDocument()
+    expect(screen.getByText('Pollen present')).toBeInTheDocument()
+    expect(screen.getByLabelText('Pollen concentrations')).toHaveTextContent('Grass 12.4 grains/m³')
   })
 })

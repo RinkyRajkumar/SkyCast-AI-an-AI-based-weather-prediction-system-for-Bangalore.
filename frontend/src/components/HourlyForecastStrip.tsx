@@ -1,8 +1,9 @@
 import { useRef } from 'react'
-import type { HourlyForecast } from '../types'
+import type { HourlyForecast, WeatherLocation } from '../types'
 
 interface HourlyForecastStripProps {
   forecasts: HourlyForecast[]
+  location: WeatherLocation
 }
 
 function weatherClass(weatherCode: number): string {
@@ -11,11 +12,11 @@ function weatherClass(weatherCode: number): string {
   return 'hourly-weather-clear'
 }
 
-function timeLabel(timestamp: string): string {
-  return new Intl.DateTimeFormat('en-IN', { hour: 'numeric' }).format(new Date(timestamp))
+function timeLabel(timestamp: string, timezone: string): string {
+  return new Intl.DateTimeFormat('en-IN', { hour: 'numeric', timeZone: timezone }).format(new Date(timestamp))
 }
 
-export function HourlyForecastStrip({ forecasts }: HourlyForecastStripProps) {
+export function HourlyForecastStrip({ forecasts, location }: HourlyForecastStripProps) {
   const stripRef = useRef<HTMLDivElement>(null)
 
   function moveHours(direction: number) {
@@ -26,14 +27,14 @@ export function HourlyForecastStrip({ forecasts }: HourlyForecastStripProps) {
     <section className="hourly-section" aria-labelledby="hourly-weather-heading">
       <div className="hourly-title-row">
         <div><p className="eyebrow">Hourly weather</p><h2 id="hourly-weather-heading">Next 24 hours</h2></div>
-        <span>Live Open-Meteo outlook</span>
+        <span>{location.name} &middot; Live Open-Meteo outlook</span>
       </div>
       <div className="hourly-carousel">
         <button className="hourly-scroll-button hourly-scroll-left" type="button" aria-label="Show earlier hours" onClick={() => moveHours(-1)}>&larr;</button>
-        <div ref={stripRef} className="hourly-strip" aria-label="Hourly Bengaluru weather forecast">
+        <div ref={stripRef} className="hourly-strip" aria-label={`Hourly ${location.name} weather forecast`}>
           {forecasts.map((forecast) => (
             <article className="hourly-card" key={forecast.timestamp}>
-              <strong>{timeLabel(forecast.timestamp)}</strong>
+              <strong>{timeLabel(forecast.timestamp, location.timezone)}</strong>
               <span className={`hourly-weather-icon ${weatherClass(forecast.weather_code)}`} aria-hidden="true"><i /></span>
               <b>{Math.round(forecast.temperature)}&deg;</b>
               <small><span aria-hidden="true">&#9679;</span> {Math.round(forecast.precipitation_probability)}%</small>

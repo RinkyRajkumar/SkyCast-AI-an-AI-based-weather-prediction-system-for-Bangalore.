@@ -1,8 +1,9 @@
-import type { Forecast, WeatherObservation } from '../types'
+import type { Forecast, WeatherLocation, WeatherObservation } from '../types'
 
 interface WeatherSceneProps {
   observation: WeatherObservation
   nextForecast?: Forecast
+  location: WeatherLocation
 }
 
 type SceneCondition = 'clear' | 'cloudy' | 'rainy'
@@ -14,32 +15,33 @@ function getSceneCondition(observation: WeatherObservation, nextForecast?: Forec
   return observation.cloud_cover >= 55 ? 'cloudy' : 'clear'
 }
 
-function getSceneDescription(condition: SceneCondition, nextForecast?: Forecast): string {
+function getSceneDescription(condition: SceneCondition, location: WeatherLocation, nextForecast?: Forecast): string {
   if (condition === 'rainy') {
-    return nextForecast?.rain_expected ? 'Rain likely in the next hour' : 'Light rain around Bengaluru'
+    return nextForecast?.rain_expected ? 'Rain likely in the next hour' : `Light rain around ${location.name}`
   }
-  if (condition === 'cloudy') return 'Clouds across Bengaluru'
-  return 'Bright skies over Bengaluru'
+  if (condition === 'cloudy') return `Clouds across ${location.name}`
+  return `Bright skies over ${location.name}`
 }
 
-function formatTime(timestamp: string): string {
+function formatTime(timestamp: string, timezone: string): string {
   return new Intl.DateTimeFormat('en-IN', {
     hour: 'numeric',
     minute: '2-digit',
     weekday: 'long',
+    timeZone: timezone,
   }).format(new Date(timestamp))
 }
 
-export function WeatherScene({ observation, nextForecast }: WeatherSceneProps) {
+export function WeatherScene({ observation, nextForecast, location }: WeatherSceneProps) {
   const condition = getSceneCondition(observation, nextForecast)
-  const description = getSceneDescription(condition, nextForecast)
+  const description = getSceneDescription(condition, location, nextForecast)
 
   return (
     <article className={`weather-scene weather-scene-${condition}`} aria-label={description}>
       <div className="weather-scene-copy">
         <p className="eyebrow">Live weather · Open-Meteo</p>
         <h2>{description}</h2>
-        <p className="scene-time">{formatTime(observation.timestamp)}</p>
+        <p className="scene-time">{formatTime(observation.timestamp, location.timezone)}</p>
         <div className="scene-temperature">
           {observation.temperature.toFixed(1)}<sup>°C</sup>
         </div>

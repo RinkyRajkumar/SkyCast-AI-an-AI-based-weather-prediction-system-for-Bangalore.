@@ -4,7 +4,7 @@ import { BengaluruRadarMap } from './BengaluruRadarMap'
 
 describe('BengaluruRadarMap', () => {
   it('embeds a live Bengaluru radar overlay', () => {
-    render(<BengaluruRadarMap />)
+    render(<BengaluruRadarMap location={{ name: 'Bengaluru', country: 'India', latitude: 12.9716, longitude: 77.5946, timezone: 'Asia/Kolkata' }} />)
 
     const frame = screen.getByTitle('Live weather radar for Bengaluru')
     expect(frame).toHaveAttribute('src', expect.stringContaining('overlay=radar'))

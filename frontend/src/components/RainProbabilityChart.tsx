@@ -11,18 +11,18 @@ import type { HourlyForecast } from '../types'
 
 interface RainProbabilityChartProps {
   forecasts: HourlyForecast[]
+  timezone: string
 }
 
 const tooltipStyle = { borderRadius: 12, border: '1px solid #dde5e1' }
 
-function amPmTime(timestamp: unknown): string {
-  const hour = Number(String(timestamp).slice(11, 13))
-  if (!Number.isInteger(hour) || hour < 0 || hour > 23) return '—'
-  const displayHour = hour % 12 || 12
-  return `${displayHour} ${hour < 12 ? 'AM' : 'PM'}`
+function amPmTime(timestamp: unknown, timezone: string): string {
+  const date = new Date(String(timestamp))
+  if (Number.isNaN(date.getTime())) return '—'
+  return new Intl.DateTimeFormat('en-IN', { hour: 'numeric', hour12: true, timeZone: timezone }).format(date)
 }
 
-export function RainProbabilityChart({ forecasts }: RainProbabilityChartProps) {
+export function RainProbabilityChart({ forecasts, timezone }: RainProbabilityChartProps) {
   const data = forecasts.map((forecast) => ({
     time: forecast.timestamp,
     probability: Math.round(forecast.precipitation_probability),
@@ -48,9 +48,9 @@ export function RainProbabilityChart({ forecasts }: RainProbabilityChartProps) {
               </linearGradient>
             </defs>
             <CartesianGrid stroke="#e8eeeb" strokeDasharray="4 4" vertical={false} />
-            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#6d7c77' }} tickFormatter={amPmTime} interval={2} />
+            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#6d7c77' }} tickFormatter={(value) => amPmTime(value, timezone)} interval={2} />
             <YAxis width={38} domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#6d7c77' }} />
-            <Tooltip contentStyle={tooltipStyle} labelFormatter={amPmTime} formatter={(value) => [`${value ?? 0}%`, 'Rain probability']} />
+            <Tooltip contentStyle={tooltipStyle} labelFormatter={(value) => amPmTime(value, timezone)} formatter={(value) => [`${value ?? 0}%`, 'Rain probability']} />
             <Line type="monotone" dataKey="probability" stroke="url(#rain-probability-by-height)" strokeWidth={3} dot={{ r: 5, fill: '#5ba89a', stroke: '#f7faf8', strokeWidth: 3 }} activeDot={{ r: 7 }} />
           </LineChart>
         </ResponsiveContainer>

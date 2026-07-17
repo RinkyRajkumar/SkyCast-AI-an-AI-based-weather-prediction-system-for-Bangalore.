@@ -10,6 +10,7 @@ from src import config as pipeline_config
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LOCATION = "Bangalore"
 DISPLAY_LOCATION = "Bengaluru, India"
+DEFAULT_LOCATION_NAME = "Bengaluru"
 TIMEZONE = pipeline_config.TIMEZONE
 FORECAST_HORIZONS = pipeline_config.FORECAST_HORIZONS
 MINIMUM_OBSERVATIONS = max(pipeline_config.TEMPERATURE_LAGS) + 1
@@ -58,6 +59,7 @@ CORS_ALLOW_CREDENTIALS = os.getenv(
 
 OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 OPEN_METEO_AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
+OPEN_METEO_GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
 OPEN_METEO_LATITUDE = 12.9716
 OPEN_METEO_LONGITUDE = 77.5946
 OPEN_METEO_PAST_HOURS = 168
@@ -95,3 +97,20 @@ OPEN_METEO_DAILY_FIELDS = (
 )
 OPEN_METEO_AIR_QUALITY_FIELDS = ("us_aqi", "pm2_5", "pm10")
 OPEN_METEO_UV_FIELD = "uv_index"
+OPEN_METEO_POLLEN_FIELDS = (
+    "alder_pollen",
+    "birch_pollen",
+    "grass_pollen",
+    "mugwort_pollen",
+    "olive_pollen",
+    "ragweed_pollen",
+)
+
+CLIMATE_NEWS_RSS_URL = os.getenv(
+    "SKYCAST_CLIMATE_NEWS_RSS_URL",
+    "https://news.google.com/rss/search?q={query}&hl=en-IN&gl=IN&ceid=IN:en",
+)
+CLIMATE_NEWS_CACHE_SECONDS = 30 * 60
+CLIMATE_NEWS_MAX_ITEMS = 6
+LOCATION_SEARCH_CACHE_SECONDS = 24 * 60 * 60
+LOCATION_SEARCH_MAX_RESULTS = 8

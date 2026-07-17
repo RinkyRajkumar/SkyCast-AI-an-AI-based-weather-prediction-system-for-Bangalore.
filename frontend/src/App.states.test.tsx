@@ -2,15 +2,16 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
-import { getEnvironment, getObservations, getPrediction } from './api/weatherApi'
+import { getClimateNews, getEnvironment, getObservations, getPrediction } from './api/weatherApi'
 import type { WeatherObservation } from './types'
 
 vi.mock('./api/weatherApi', async (importOriginal) => {
   const original = await importOriginal<typeof import('./api/weatherApi')>()
-  return { ...original, getEnvironment: vi.fn(), getObservations: vi.fn(), getPrediction: vi.fn() }
+  return { ...original, getClimateNews: vi.fn(), getEnvironment: vi.fn(), getObservations: vi.fn(), getPrediction: vi.fn() }
 })
 
 const mockedEnvironment = vi.mocked(getEnvironment)
+const mockedClimateNews = vi.mocked(getClimateNews)
 const mockedObservations = vi.mocked(getObservations)
 const mockedPrediction = vi.mocked(getPrediction)
 
@@ -62,18 +63,26 @@ const environmentResponse = {
   air_quality_description: 'Air quality is satisfactory for most people.',
   dust_outlook: 'Low', dust_description: 'Outdoor dust exposure is currently low.',
   uv_index: 2.4, uv_label: 'Low', uv_description: 'Minimal protection is needed for typical outdoor activity.',
+  pollen_available: false, pollen_outlook: 'Pollen data unavailable',
+  pollen_description: 'The live weather provider does not currently supply pollen coverage for Bengaluru.', pollen_readings: [],
+}
+
+const climateNewsResponse = {
+  source: 'Google News RSS', fetched_at: '2026-07-18T00:00:00Z',
+  articles: [{ title: 'Climate outlook update', url: 'https://example.com/article', source: 'Example News', published_at: '2026-07-18T00:00:00Z' }],
 }
 
 describe('SkyCast automatic weather-loading states', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockedEnvironment.mockResolvedValue(environmentResponse)
+    mockedClimateNews.mockResolvedValue(climateNewsResponse)
   })
 
   it('loads Open-Meteo observations then automatically requests a forecast', async () => {
     const observations = history()
     mockedObservations.mockResolvedValue({
-      location: 'Bengaluru, India', source: 'Open-Meteo', latest_timestamp: observations.at(-1)!.timestamp, observations, hourly_forecasts: hourlyForecasts(), daily_forecasts: dailyForecasts(),
+      location: 'Bengaluru, India', latitude: 12.9716, longitude: 77.5946, timezone: 'Asia/Kolkata', model_supported: true, source: 'Open-Meteo', latest_timestamp: observations.at(-1)!.timestamp, observations, hourly_forecasts: hourlyForecasts(), daily_forecasts: dailyForecasts(),
     })
     mockedPrediction.mockResolvedValue(forecastResponse)
     render(<App />)
@@ -82,12 +91,13 @@ describe('SkyCast automatic weather-loading states', () => {
     expect(screen.getByRole('heading', { name: 'Next 24 hours' })).toBeInTheDocument()
     expect(mockedPrediction).toHaveBeenCalledWith(observations, expect.any(AbortSignal))
     expect(await screen.findByText('US AQI 42')).toBeInTheDocument()
+    expect(await screen.findByText('Climate outlook update')).toBeInTheDocument()
     expect(screen.getByText('Weather data provided by Open-Meteo.')).toBeInTheDocument()
   })
 
   it('shows a retry option when loading observations fails', async () => {
     mockedObservations.mockRejectedValueOnce(new Error('Open-Meteo timed out.'))
-    mockedObservations.mockResolvedValue({ location: 'Bengaluru, India', source: 'Open-Meteo', latest_timestamp: history().at(-1)!.timestamp, observations: history(), hourly_forecasts: hourlyForecasts(), daily_forecasts: dailyForecasts() })
+    mockedObservations.mockResolvedValue({ location: 'Bengaluru, India', latitude: 12.9716, longitude: 77.5946, timezone: 'Asia/Kolkata', model_supported: true, source: 'Open-Meteo', latest_timestamp: history().at(-1)!.timestamp, observations: history(), hourly_forecasts: hourlyForecasts(), daily_forecasts: dailyForecasts() })
     mockedPrediction.mockResolvedValue(forecastResponse)
     const user = userEvent.setup()
     render(<App />)
@@ -95,4 +105,5 @@ describe('SkyCast automatic weather-loading states', () => {
     await user.click(screen.getByRole('button', { name: 'Retry' }))
     expect(await screen.findByText('Bright skies over Bengaluru')).toBeInTheDocument()
   })
+
 })

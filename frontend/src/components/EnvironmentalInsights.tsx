@@ -1,10 +1,13 @@
-import type { DailyForecast, EnvironmentalInsights as EnvironmentalInsightsData } from '../types'
+import type { ClimateNewsItem, DailyForecast, EnvironmentalInsights as EnvironmentalInsightsData, WeatherLocation } from '../types'
 import { BengaluruRadarMap } from './BengaluruRadarMap'
+import { ClimateNewsPanel } from './ClimateNewsPanel'
 import { SunMoonPanel } from './SunMoonPanel'
 
 interface EnvironmentalInsightsProps {
   insight: EnvironmentalInsightsData
   dailyForecast?: DailyForecast
+  news?: ClimateNewsItem[]
+  location: WeatherLocation
 }
 
 function airTone(label: string): string {
@@ -26,13 +29,17 @@ function uvTone(index: number): string {
   return 'uv-very-high'
 }
 
-export function EnvironmentalInsights({ insight, dailyForecast }: EnvironmentalInsightsProps) {
+export function EnvironmentalInsights({ insight, dailyForecast, news = [], location }: EnvironmentalInsightsProps) {
   const uvProgress = `${Math.min(insight.uv_index / 11, 1) * 100}%`
+  const pollenReadings = insight.pollen_readings ?? []
+  const pollenAvailable = insight.pollen_available ?? false
+  const pollenOutlook = insight.pollen_outlook ?? 'Pollen data unavailable'
+  const pollenDescription = insight.pollen_description ?? `The live weather provider does not currently supply pollen coverage for ${location.name}.`
 
   return (
     <section className="environment-insights" aria-label="Environmental insights">
       <article className="insight-card">
-        <div className="insight-header"><span>Air quality</span><span>Live Bengaluru reading</span></div>
+        <div className="insight-header"><span>Air quality</span><span>Live {location.name} reading</span></div>
         <div className="insight-main">
           <div className="insight-title"><span aria-hidden="true">AQ</span><strong>Air quality</strong></div>
           <div className={`insight-level ${airTone(insight.air_quality_label)}`}>
@@ -68,8 +75,26 @@ export function EnvironmentalInsights({ insight, dailyForecast }: EnvironmentalI
           </div>
         </div>
       </article>
-      <BengaluruRadarMap />
-      {dailyForecast ? <SunMoonPanel forecast={dailyForecast} /> : null}
+      <article className={`pollen-insight-card ${pollenAvailable ? 'pollen-covered' : 'pollen-unavailable'}`}>
+        <div className="insight-header"><span>Pollen &amp; allergy outlook</span><span>Next 24 hours</span></div>
+        <div className="pollen-content">
+          <div className="pollen-mark" aria-hidden="true"><span /></div>
+          <div className="pollen-copy">
+            <div><strong>{pollenOutlook}</strong><span>{location.name} pollen forecast</span></div>
+            <p>{pollenDescription}</p>
+            {pollenReadings.length ? (
+              <div className="pollen-readings" aria-label="Pollen concentrations">
+                {pollenReadings.map((reading) => (
+                  <span key={reading.pollen_type}><b>{reading.pollen_type}</b> {reading.concentration.toFixed(1)} grains/m&sup3;</span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </article>
+      <BengaluruRadarMap location={location} />
+      {dailyForecast ? <SunMoonPanel forecast={dailyForecast} location={location} /> : null}
+      {news.length ? <ClimateNewsPanel articles={news} location={location} /> : null}
     </section>
   )
 }

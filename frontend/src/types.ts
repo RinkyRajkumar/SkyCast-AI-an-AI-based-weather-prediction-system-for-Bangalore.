@@ -25,11 +25,29 @@ export interface PredictionResponse {
 
 export interface ObservationHistoryResponse {
   location: string
+  latitude: number
+  longitude: number
+  timezone: string
+  model_supported: boolean
   source: string
   latest_timestamp: string
   observations: WeatherObservation[]
   hourly_forecasts: HourlyForecast[]
   daily_forecasts: DailyForecast[]
+}
+
+export interface WeatherLocation {
+  name: string
+  latitude: number
+  longitude: number
+  timezone: string
+  country?: string | null
+  admin1?: string | null
+}
+
+export interface LocationSearchResponse {
+  query: string
+  results: WeatherLocation[]
 }
 
 export interface HourlyForecast {
@@ -65,4 +83,26 @@ export interface EnvironmentalInsights {
   uv_index: number
   uv_label: string
   uv_description: string
+  pollen_available: boolean
+  pollen_outlook: string
+  pollen_description: string
+  pollen_readings: PollenReading[]
+}
+
+export interface PollenReading {
+  pollen_type: string
+  concentration: number
+}
+
+export interface ClimateNewsItem {
+  title: string
+  url: string
+  source: string
+  published_at: string
+}
+
+export interface ClimateNewsResponse {
+  source: string
+  fetched_at: string
+  articles: ClimateNewsItem[]
 }

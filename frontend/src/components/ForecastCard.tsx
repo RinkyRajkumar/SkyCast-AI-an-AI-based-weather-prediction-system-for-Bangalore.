@@ -2,6 +2,7 @@ import type { DailyForecast } from '../types'
 
 interface ForecastCardProps {
   forecast: DailyForecast
+  timezone: string
 }
 
 function weatherCopy(forecast: DailyForecast): { title: string; detail: string; graphic: string; className: string } {
@@ -21,19 +22,28 @@ function weatherCopy(forecast: DailyForecast): { title: string; detail: string; 
   return { title: 'Clear outlook', detail: `${temperatureRange} Bright skies are expected; ${rainDetail}`, graphic: 'forecast-clear', className: 'risk-low' }
 }
 
-function dayLabel(date: string): { day: string; date: string } {
-  const forecastDate = new Date(`${date}T00:00:00`)
-  const today = new Date()
-  const isToday = forecastDate.toDateString() === today.toDateString()
+function locationDateParts(value: Date, timezone: string): Record<string, string> {
+  return Object.fromEntries(
+    new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' })
+      .formatToParts(value)
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value]),
+  )
+}
+
+function dayLabel(date: string, timezone: string): { day: string; date: string } {
+  const forecastDate = new Date(`${date}T12:00:00Z`)
+  const todayParts = locationDateParts(new Date(), timezone)
+  const isToday = date === `${todayParts.year}-${todayParts.month}-${todayParts.day}`
   return {
-    day: isToday ? 'Today' : new Intl.DateTimeFormat('en-IN', { weekday: 'short' }).format(forecastDate),
-    date: new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short' }).format(forecastDate),
+    day: isToday ? 'Today' : new Intl.DateTimeFormat('en-IN', { weekday: 'short', timeZone: timezone }).format(forecastDate),
+    date: new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', timeZone: timezone }).format(forecastDate),
   }
 }
 
-export function ForecastCard({ forecast }: ForecastCardProps) {
+export function ForecastCard({ forecast, timezone }: ForecastCardProps) {
   const weather = weatherCopy(forecast)
-  const day = dayLabel(forecast.date)
+  const day = dayLabel(forecast.date, timezone)
 
   return (
     <article className="forecast-card">

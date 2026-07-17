@@ -6,6 +6,7 @@ describe('ForecastCard', () => {
   it('renders forecast values in the forecast-list row', () => {
     render(
       <ForecastCard
+        timezone="Asia/Kolkata"
         forecast={{
           date: '2026-07-18',
           weather_code: 61,

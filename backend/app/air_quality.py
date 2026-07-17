@@ -8,18 +8,20 @@ import time
 from datetime import datetime
 from threading import RLock
 from typing import Any, Callable
+from zoneinfo import ZoneInfo
 
 import httpx
 
 from backend.app import config
+from backend.app.locations import default_location
 from backend.app.open_meteo import OpenMeteoObservationError
-from backend.app.schemas import EnvironmentalInsightsResponse
+from backend.app.schemas import EnvironmentalInsightsResponse, PollenReading, WeatherLocation
 
 LOGGER = logging.getLogger(__name__)
 
 
 class OpenMeteoAirQualityService:
-    """Provide a one-hour cached air-quality, dust, and UV summary."""
+    """Provide cached air-quality, dust, and UV summaries for selected places."""
 
     def __init__(
         self,
@@ -33,37 +35,61 @@ class OpenMeteoAirQualityService:
         self.retries = retries
         self._clock = clock
         self._sleeper = sleeper
-        self._cache: EnvironmentalInsightsResponse | None = None
-        self._cached_at = 0.0
+        self._cache: dict[tuple[float, float, str], tuple[float, EnvironmentalInsightsResponse]] = {}
         self._lock = RLock()
 
-    def fetch_environment(self) -> EnvironmentalInsightsResponse:
+    def fetch_environment(self, location: WeatherLocation | None = None) -> EnvironmentalInsightsResponse:
         """Return a cached environmental summary or request fresh Open-Meteo data."""
+        selected_location = location or default_location()
+        cache_key = (
+            round(selected_location.latitude, 4),
+            round(selected_location.longitude, 4),
+            selected_location.timezone,
+        )
         with self._lock:
-            if self._cache is not None and self._clock() - self._cached_at < self.cache_seconds:
-                LOGGER.info("Using cached Open-Meteo environmental data")
-                return self._cache.model_copy(deep=True)
+            cached = self._cache.get(cache_key)
+            if cached is not None and self._clock() - cached[0] < self.cache_seconds:
+                LOGGER.info("Using cached Open-Meteo environmental data for %s", selected_location.label)
+                return cached[1].model_copy(deep=True)
 
             air_payload = self._request_json(
                 config.OPEN_METEO_AIR_QUALITY_URL,
                 {"current": ",".join(config.OPEN_METEO_AIR_QUALITY_FIELDS)},
                 "air-quality",
+                selected_location,
             )
             uv_payload = self._request_json(
                 config.OPEN_METEO_FORECAST_URL,
                 {"current": config.OPEN_METEO_UV_FIELD},
                 "UV",
+                selected_location,
             )
-            response = self._to_environmental_insights(air_payload, uv_payload)
-            self._cache = response
-            self._cached_at = self._clock()
+            try:
+                pollen_payload: dict[str, Any] | None = self._request_json(
+                    config.OPEN_METEO_AIR_QUALITY_URL,
+                    {
+                        "hourly": ",".join(config.OPEN_METEO_POLLEN_FIELDS),
+                        "forecast_hours": "24",
+                    },
+                    "pollen",
+                    selected_location,
+                )
+            except OpenMeteoObservationError as exc:
+                LOGGER.info("Pollen data unavailable for %s: %s", selected_location.label, exc)
+                pollen_payload = None
+            response = self._to_environmental_insights(
+                air_payload, uv_payload, selected_location, pollen_payload
+            )
+            self._cache[cache_key] = (self._clock(), response)
             return response.model_copy(deep=True)
 
-    def _request_json(self, url: str, request_params: dict[str, str], label: str) -> dict[str, Any]:
+    def _request_json(
+        self, url: str, request_params: dict[str, str], label: str, location: WeatherLocation
+    ) -> dict[str, Any]:
         params = {
-            "latitude": config.OPEN_METEO_LATITUDE,
-            "longitude": config.OPEN_METEO_LONGITUDE,
-            "timezone": config.TIMEZONE,
+            "latitude": location.latitude,
+            "longitude": location.longitude,
+            "timezone": location.timezone,
             **request_params,
         }
         last_error: Exception | None = None
@@ -80,10 +106,12 @@ class OpenMeteoAirQualityService:
                 LOGGER.warning("%s request failed (attempt %d/%d): %s", label.title(), attempt + 1, self.retries, exc)
                 if attempt < self.retries - 1:
                     self._sleeper(0.5 * (2**attempt))
-        raise OpenMeteoObservationError(f"Unable to fetch Bengaluru {label} data from Open-Meteo.") from last_error
+        raise OpenMeteoObservationError(f"Unable to fetch {location.label} {label} data from Open-Meteo.") from last_error
 
     @staticmethod
-    def _current_values(payload: dict[str, Any], fields: tuple[str, ...], label: str) -> tuple[datetime, dict[str, float]]:
+    def _current_values(
+        payload: dict[str, Any], fields: tuple[str, ...], label: str, location: WeatherLocation
+    ) -> tuple[datetime, dict[str, float]]:
         current = payload.get("current")
         if not isinstance(current, dict):
             raise OpenMeteoObservationError(f"Open-Meteo response did not contain current {label} data.")
@@ -97,16 +125,25 @@ class OpenMeteoAirQualityService:
             raise OpenMeteoObservationError(f"Open-Meteo {label} response has invalid values: {', '.join(invalid)}.")
         try:
             observed_at = datetime.fromisoformat(str(current["time"]).replace("Z", "+00:00"))
+            if observed_at.tzinfo is None:
+                observed_at = observed_at.replace(tzinfo=ZoneInfo(location.timezone))
         except ValueError as exc:
             raise OpenMeteoObservationError(f"Open-Meteo returned an invalid {label} timestamp.") from exc
         return observed_at, {field: float(value) for field, value in values.items()}
 
     @classmethod
     def _to_environmental_insights(
-        cls, air_payload: dict[str, Any], uv_payload: dict[str, Any]
+        cls,
+        air_payload: dict[str, Any],
+        uv_payload: dict[str, Any],
+        location: WeatherLocation | None = None,
+        pollen_payload: dict[str, Any] | None = None,
     ) -> EnvironmentalInsightsResponse:
-        observed_at, air_values = cls._current_values(air_payload, config.OPEN_METEO_AIR_QUALITY_FIELDS, "air-quality")
-        _, uv_values = cls._current_values(uv_payload, (config.OPEN_METEO_UV_FIELD,), "UV")
+        selected_location = location or default_location()
+        observed_at, air_values = cls._current_values(
+            air_payload, config.OPEN_METEO_AIR_QUALITY_FIELDS, "air-quality", selected_location
+        )
+        _, uv_values = cls._current_values(uv_payload, (config.OPEN_METEO_UV_FIELD,), "UV", selected_location)
 
         aqi = round(air_values["us_aqi"])
         if aqi <= 50:
@@ -138,8 +175,12 @@ class OpenMeteoAirQualityService:
         else:
             uv_label, uv_description = "Extreme", "Avoid extended outdoor exposure around midday."
 
+        pollen_available, pollen_outlook, pollen_description, pollen_readings = cls._pollen_summary(
+            pollen_payload, selected_location
+        )
+
         return EnvironmentalInsightsResponse(
-            location=config.DISPLAY_LOCATION,
+            location=selected_location.label,
             source="Open-Meteo",
             observed_at=observed_at,
             us_aqi=aqi,
@@ -152,4 +193,71 @@ class OpenMeteoAirQualityService:
             uv_index=uv_index,
             uv_label=uv_label,
             uv_description=uv_description,
+            pollen_available=pollen_available,
+            pollen_outlook=pollen_outlook,
+            pollen_description=pollen_description,
+            pollen_readings=pollen_readings,
+        )
+
+    @staticmethod
+    def _pollen_summary(
+        payload: dict[str, Any] | None, location: WeatherLocation
+    ) -> tuple[bool, str, str, list[PollenReading]]:
+        """Summarise the next 24 hours without treating missing coverage as a zero reading."""
+        hourly = payload.get("hourly") if isinstance(payload, dict) else None
+        if not isinstance(hourly, dict):
+            return (
+                False,
+                "Pollen data unavailable",
+                f"The live weather provider does not currently supply pollen coverage for {location.name}.",
+                [],
+            )
+
+        reading_names = {
+            "alder_pollen": "Alder",
+            "birch_pollen": "Birch",
+            "grass_pollen": "Grass",
+            "mugwort_pollen": "Mugwort",
+            "olive_pollen": "Olive",
+            "ragweed_pollen": "Ragweed",
+        }
+        readings: list[PollenReading] = []
+        has_coverage = False
+        for field in config.OPEN_METEO_POLLEN_FIELDS:
+            values = hourly.get(field)
+            if not isinstance(values, list):
+                continue
+            valid_values = [
+                float(value)
+                for value in values
+                if isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+            ]
+            if not valid_values:
+                continue
+            has_coverage = True
+            peak = max(valid_values)
+            if peak > 0:
+                readings.append(PollenReading(pollen_type=reading_names[field], concentration=round(peak, 1)))
+
+        if not has_coverage:
+            return (
+                False,
+                "Pollen data unavailable",
+                f"The live weather provider does not currently supply pollen coverage for {location.name}.",
+                [],
+            )
+        readings.sort(key=lambda reading: reading.concentration, reverse=True)
+        if not readings:
+            return (
+                True,
+                "No listed pollen detected",
+                "No listed pollen types are forecast over the next 24 hours by the live weather provider.",
+                [],
+            )
+        names = ", ".join(reading.pollen_type.lower() for reading in readings)
+        return (
+            True,
+            "Pollen present",
+            f"{names.capitalize()} pollen is forecast over the next 24 hours. This may affect people sensitive to those pollen types.",
+            readings,
         )

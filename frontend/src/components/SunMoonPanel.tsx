@@ -1,7 +1,8 @@
-import type { DailyForecast } from '../types'
+import type { DailyForecast, WeatherLocation } from '../types'
 
 interface SunMoonPanelProps {
   forecast: DailyForecast
+  location: WeatherLocation
 }
 
 interface MoonPhase {
@@ -9,12 +10,12 @@ interface MoonPhase {
   className: string
 }
 
-function formatTime(value: string): string {
-  const date = new Date(`${value}+05:30`)
+function formatTime(value: string, timezone: string): string {
+  const date = new Date(value)
   return new Intl.DateTimeFormat('en-IN', {
     hour: 'numeric',
     minute: '2-digit',
-    timeZone: 'Asia/Kolkata',
+    timeZone: timezone,
   }).format(date)
 }
 
@@ -36,16 +37,16 @@ function moonPhase(date: string): MoonPhase {
   return { label: 'Waning Crescent', className: 'moon-waning-crescent' }
 }
 
-export function SunMoonPanel({ forecast }: SunMoonPanelProps) {
+export function SunMoonPanel({ forecast, location }: SunMoonPanelProps) {
   const moon = moonPhase(forecast.date)
 
   return (
     <section className="sun-moon-card" aria-labelledby="sun-moon-heading">
-      <div className="insight-header"><span id="sun-moon-heading">Sun &amp; Moon</span><span>For Bengaluru</span></div>
+      <div className="insight-header"><span id="sun-moon-heading">Sun &amp; Moon</span><span>For {location.name}</span></div>
       <div className="sun-moon-row">
         <div className="solar-icon" aria-hidden="true" />
         <strong>{daylightDuration(forecast.daylight_duration_seconds)} of daylight</strong>
-        <dl><div><dt>Rise</dt><dd>{formatTime(forecast.sunrise)}</dd></div><div><dt>Set</dt><dd>{formatTime(forecast.sunset)}</dd></div></dl>
+        <dl><div><dt>Rise</dt><dd>{formatTime(forecast.sunrise, location.timezone)}</dd></div><div><dt>Set</dt><dd>{formatTime(forecast.sunset, location.timezone)}</dd></div></dl>
       </div>
       <div className="sun-moon-row">
         <div className={`moon-icon ${moon.className}`} aria-hidden="true" />

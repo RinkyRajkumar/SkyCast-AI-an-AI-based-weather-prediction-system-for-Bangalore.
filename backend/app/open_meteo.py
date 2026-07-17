@@ -8,11 +8,13 @@ import time
 from datetime import date, datetime, timedelta
 from threading import RLock
 from typing import Any, Callable
+from zoneinfo import ZoneInfo
 
 import httpx
 
 from backend.app import config
-from backend.app.schemas import DailyForecast, HourlyForecast, ObservationHistoryResponse, WeatherObservation
+from backend.app.locations import default_location
+from backend.app.schemas import DailyForecast, HourlyForecast, ObservationHistoryResponse, WeatherLocation, WeatherObservation
 from pydantic import ValidationError
 
 LOGGER = logging.getLogger(__name__)
@@ -23,7 +25,7 @@ class OpenMeteoObservationError(RuntimeError):
 
 
 class OpenMeteoObservationService:
-    """Provide a one-hour cached, prediction-ready Bengaluru weather history."""
+    """Provide cached, validated, location-specific weather history and outlooks."""
 
     def __init__(
         self,
@@ -37,29 +39,34 @@ class OpenMeteoObservationService:
         self.retries = retries
         self._clock = clock
         self._sleeper = sleeper
-        self._cache: ObservationHistoryResponse | None = None
-        self._cached_at = 0.0
+        self._cache: dict[tuple[float, float, str], tuple[float, ObservationHistoryResponse]] = {}
         self._lock = RLock()
 
-    def fetch_observations(self) -> ObservationHistoryResponse:
+    def fetch_observations(self, location: WeatherLocation | None = None) -> ObservationHistoryResponse:
         """Return cached observations or obtain and validate a fresh Open-Meteo response."""
+        selected_location = location or default_location()
+        cache_key = (
+            round(selected_location.latitude, 4),
+            round(selected_location.longitude, 4),
+            selected_location.timezone,
+        )
         with self._lock:
-            if self._cache is not None and self._clock() - self._cached_at < self.cache_seconds:
-                LOGGER.info("Using cached Open-Meteo observations")
-                return self._cache.model_copy(deep=True)
+            cached = self._cache.get(cache_key)
+            if cached is not None and self._clock() - cached[0] < self.cache_seconds:
+                LOGGER.info("Using cached Open-Meteo observations for %s", selected_location.label)
+                return cached[1].model_copy(deep=True)
 
-            payload = self._request_hourly_data()
-            history = self._to_observation_history(payload)
-            self._cache = history
-            self._cached_at = self._clock()
-            LOGGER.info("Cached %d Open-Meteo Bengaluru observations", len(history.observations))
+            payload = self._request_hourly_data(selected_location)
+            history = self._to_observation_history(payload, selected_location)
+            self._cache[cache_key] = (self._clock(), history)
+            LOGGER.info("Cached %d Open-Meteo observations for %s", len(history.observations), selected_location.label)
             return history.model_copy(deep=True)
 
-    def _request_hourly_data(self) -> dict[str, Any]:
+    def _request_hourly_data(self, location: WeatherLocation) -> dict[str, Any]:
         params = {
-            "latitude": config.OPEN_METEO_LATITUDE,
-            "longitude": config.OPEN_METEO_LONGITUDE,
-            "timezone": config.TIMEZONE,
+            "latitude": location.latitude,
+            "longitude": location.longitude,
+            "timezone": location.timezone,
             "past_hours": config.OPEN_METEO_PAST_HOURS,
             "forecast_hours": config.OPEN_METEO_FORECAST_HOURS,
             "forecast_days": config.OPEN_METEO_FORECAST_DAYS,
@@ -90,12 +97,15 @@ class OpenMeteoObservationService:
                 if attempt < self.retries - 1:
                     self._sleeper(0.5 * (2**attempt))
         raise OpenMeteoObservationError(
-            "Unable to fetch Bengaluru weather history from Open-Meteo. Please try again shortly."
+            f"Unable to fetch {location.label} weather history from Open-Meteo. Please try again shortly."
         ) from last_error
 
     @staticmethod
-    def _to_observation_history(payload: dict[str, Any]) -> ObservationHistoryResponse:
+    def _to_observation_history(
+        payload: dict[str, Any], location: WeatherLocation | None = None
+    ) -> ObservationHistoryResponse:
         hourly = payload.get("hourly")
+        selected_location = location or default_location()
         if not isinstance(hourly, dict):
             raise OpenMeteoObservationError("Open-Meteo response did not contain hourly weather data.")
 
@@ -141,7 +151,7 @@ class OpenMeteoObservationService:
                     f"record {index}: {', '.join(invalid_numeric)}."
                 )
             try:
-                timestamp = datetime.fromisoformat(str(values["time"]).replace("Z", "+00:00"))
+                timestamp = OpenMeteoObservationService._parse_local_time(values["time"], selected_location)
             except ValueError as exc:
                 raise OpenMeteoObservationError(
                     f"Open-Meteo returned an invalid timestamp at record {index}."
@@ -171,10 +181,14 @@ class OpenMeteoObservationService:
 
         if observations != sorted(observations, key=lambda observation: observation.timestamp):
             raise OpenMeteoObservationError("Open-Meteo records are not sorted oldest to newest.")
-        hourly_forecasts = OpenMeteoObservationService._to_hourly_forecasts(hourly)
-        daily_forecasts = OpenMeteoObservationService._to_daily_forecasts(payload)
+        hourly_forecasts = OpenMeteoObservationService._to_hourly_forecasts(hourly, selected_location)
+        daily_forecasts = OpenMeteoObservationService._to_daily_forecasts(payload, selected_location)
         return ObservationHistoryResponse(
-            location=config.DISPLAY_LOCATION,
+            location=selected_location.label,
+            latitude=selected_location.latitude,
+            longitude=selected_location.longitude,
+            timezone=selected_location.timezone,
+            model_supported=OpenMeteoObservationService._is_model_supported(selected_location),
             source="Open-Meteo",
             latest_timestamp=observations[-1].timestamp,
             observations=observations,
@@ -183,7 +197,7 @@ class OpenMeteoObservationService:
         )
 
     @staticmethod
-    def _to_hourly_forecasts(hourly: dict[str, Any]) -> list[HourlyForecast]:
+    def _to_hourly_forecasts(hourly: dict[str, Any], location: WeatherLocation) -> list[HourlyForecast]:
         """Translate the requested upcoming hours into dashboard forecast records."""
         start_index = len(hourly["time"]) - config.OPEN_METEO_HOURLY_FORECAST_COUNT
         if start_index < 0:
@@ -192,7 +206,7 @@ class OpenMeteoObservationService:
         forecasts: list[HourlyForecast] = []
         for index in range(start_index, len(hourly["time"])):
             try:
-                timestamp = datetime.fromisoformat(str(hourly["time"][index]).replace("Z", "+00:00"))
+                timestamp = OpenMeteoObservationService._parse_local_time(hourly["time"][index], location)
                 forecasts.append(
                     HourlyForecast(
                         timestamp=timestamp,
@@ -208,7 +222,7 @@ class OpenMeteoObservationService:
         return forecasts
 
     @staticmethod
-    def _to_daily_forecasts(payload: dict[str, Any]) -> list[DailyForecast]:
+    def _to_daily_forecasts(payload: dict[str, Any], location: WeatherLocation) -> list[DailyForecast]:
         """Convert Open-Meteo daily arrays into six validated forecast records."""
         daily = payload.get("daily")
         if not isinstance(daily, dict):
@@ -266,8 +280,8 @@ class OpenMeteoObservationService:
                 )
             try:
                 forecast_date = date.fromisoformat(str(values["time"]))
-                sunrise = datetime.fromisoformat(str(values["sunrise"]).replace("Z", "+00:00"))
-                sunset = datetime.fromisoformat(str(values["sunset"]).replace("Z", "+00:00"))
+                sunrise = OpenMeteoObservationService._parse_local_time(values["sunrise"], location)
+                sunset = OpenMeteoObservationService._parse_local_time(values["sunset"], location)
             except ValueError as exc:
                 raise OpenMeteoObservationError(
                     f"Open-Meteo returned an invalid daily date at record {index}."
@@ -294,3 +308,17 @@ class OpenMeteoObservationService:
                     f"Open-Meteo returned invalid daily values at record {index}."
                 ) from exc
         return forecasts
+
+    @staticmethod
+    def _parse_local_time(value: object, location: WeatherLocation) -> datetime:
+        """Attach the selected IANA timezone to Open-Meteo's local timestamp values."""
+        timestamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return timestamp if timestamp.tzinfo is not None else timestamp.replace(tzinfo=ZoneInfo(location.timezone))
+
+    @staticmethod
+    def _is_model_supported(location: WeatherLocation) -> bool:
+        """Return whether a location matches the Bangalore-only trained model domain."""
+        return (
+            abs(location.latitude - config.OPEN_METEO_LATITUDE) < 0.02
+            and abs(location.longitude - config.OPEN_METEO_LONGITUDE) < 0.02
+        )
