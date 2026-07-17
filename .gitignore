@@ -1,0 +1,58 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Packaging and coverage
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+coverage/
+*.log
+
+# Local environment files (retain safe examples)
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# JavaScript dependencies and generated output
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Generated datasets (retain empty directories through .gitkeep)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Generated model artifacts and reports
+models/baselines/*
+models/advanced/*
+models/rain/*
+reports/*
+!reports/functionality_report.md
+!models/baselines/.gitkeep
+!reports/.gitkeep
+!models/advanced/.gitkeep
+!models/rain/.gitkeep
+
+# Local scratch files
+work/

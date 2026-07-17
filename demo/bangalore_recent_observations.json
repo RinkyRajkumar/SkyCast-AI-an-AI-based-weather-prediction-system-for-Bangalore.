@@ -1,0 +1,1694 @@
+{
+    "observations":  [
+                         {
+                             "timestamp":  "2025-12-24 23:00:00",
+                             "temperature":  17.8,
+                             "relative_humidity":  78,
+                             "precipitation":  0,
+                             "surface_pressure":  912.8,
+                             "cloud_cover":  0,
+                             "wind_speed":  11.7,
+                             "wind_direction":  81
+                         },
+                         {
+                             "timestamp":  "2025-12-25 00:00:00",
+                             "temperature":  17,
+                             "relative_humidity":  85,
+                             "precipitation":  0,
+                             "surface_pressure":  912.4,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.8,
+                             "wind_direction":  79
+                         },
+                         {
+                             "timestamp":  "2025-12-25 01:00:00",
+                             "temperature":  16.3,
+                             "relative_humidity":  88,
+                             "precipitation":  0,
+                             "surface_pressure":  912,
+                             "cloud_cover":  0,
+                             "wind_speed":  9.9,
+                             "wind_direction":  75
+                         },
+                         {
+                             "timestamp":  "2025-12-25 02:00:00",
+                             "temperature":  15.7,
+                             "relative_humidity":  91,
+                             "precipitation":  0,
+                             "surface_pressure":  911.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  9.8,
+                             "wind_direction":  73
+                         },
+                         {
+                             "timestamp":  "2025-12-25 03:00:00",
+                             "temperature":  15.3,
+                             "relative_humidity":  93,
+                             "precipitation":  0,
+                             "surface_pressure":  911.3,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.1,
+                             "wind_direction":  73
+                         },
+                         {
+                             "timestamp":  "2025-12-25 04:00:00",
+                             "temperature":  14.9,
+                             "relative_humidity":  95,
+                             "precipitation":  0,
+                             "surface_pressure":  911.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  10,
+                             "wind_direction":  75
+                         },
+                         {
+                             "timestamp":  "2025-12-25 05:00:00",
+                             "temperature":  14.5,
+                             "relative_humidity":  98,
+                             "precipitation":  0,
+                             "surface_pressure":  912,
+                             "cloud_cover":  43,
+                             "wind_speed":  10.2,
+                             "wind_direction":  80
+                         },
+                         {
+                             "timestamp":  "2025-12-25 06:00:00",
+                             "temperature":  14.4,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  912.7,
+                             "cloud_cover":  85,
+                             "wind_speed":  9.6,
+                             "wind_direction":  77
+                         },
+                         {
+                             "timestamp":  "2025-12-25 07:00:00",
+                             "temperature":  14.7,
+                             "relative_humidity":  97,
+                             "precipitation":  0,
+                             "surface_pressure":  913.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.6,
+                             "wind_direction":  74
+                         },
+                         {
+                             "timestamp":  "2025-12-25 08:00:00",
+                             "temperature":  16.8,
+                             "relative_humidity":  84,
+                             "precipitation":  0,
+                             "surface_pressure":  915.2,
+                             "cloud_cover":  4,
+                             "wind_speed":  7.3,
+                             "wind_direction":  79
+                         },
+                         {
+                             "timestamp":  "2025-12-25 09:00:00",
+                             "temperature":  19.8,
+                             "relative_humidity":  62,
+                             "precipitation":  0,
+                             "surface_pressure":  915.7,
+                             "cloud_cover":  4,
+                             "wind_speed":  9.2,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-25 10:00:00",
+                             "temperature":  22,
+                             "relative_humidity":  47,
+                             "precipitation":  0,
+                             "surface_pressure":  915.7,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.3,
+                             "wind_direction":  88
+                         },
+                         {
+                             "timestamp":  "2025-12-25 11:00:00",
+                             "temperature":  23.5,
+                             "relative_humidity":  38,
+                             "precipitation":  0,
+                             "surface_pressure":  915.4,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.1,
+                             "wind_direction":  78
+                         },
+                         {
+                             "timestamp":  "2025-12-25 12:00:00",
+                             "temperature":  25.2,
+                             "relative_humidity":  31,
+                             "precipitation":  0,
+                             "surface_pressure":  914.6,
+                             "cloud_cover":  0,
+                             "wind_speed":  7.9,
+                             "wind_direction":  79
+                         },
+                         {
+                             "timestamp":  "2025-12-25 13:00:00",
+                             "temperature":  26.3,
+                             "relative_humidity":  24,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  56,
+                             "wind_speed":  7.7,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-25 14:00:00",
+                             "temperature":  26.8,
+                             "relative_humidity":  20,
+                             "precipitation":  0,
+                             "surface_pressure":  913.1,
+                             "cloud_cover":  100,
+                             "wind_speed":  8.3,
+                             "wind_direction":  96
+                         },
+                         {
+                             "timestamp":  "2025-12-25 15:00:00",
+                             "temperature":  26.6,
+                             "relative_humidity":  19,
+                             "precipitation":  0,
+                             "surface_pressure":  912.7,
+                             "cloud_cover":  77,
+                             "wind_speed":  8.6,
+                             "wind_direction":  101
+                         },
+                         {
+                             "timestamp":  "2025-12-25 16:00:00",
+                             "temperature":  26.1,
+                             "relative_humidity":  22,
+                             "precipitation":  0,
+                             "surface_pressure":  912.7,
+                             "cloud_cover":  61,
+                             "wind_speed":  8.7,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-25 17:00:00",
+                             "temperature":  25.7,
+                             "relative_humidity":  30,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  73,
+                             "wind_speed":  7.8,
+                             "wind_direction":  109
+                         },
+                         {
+                             "timestamp":  "2025-12-25 18:00:00",
+                             "temperature":  24.3,
+                             "relative_humidity":  35,
+                             "precipitation":  0,
+                             "surface_pressure":  913.2,
+                             "cloud_cover":  53,
+                             "wind_speed":  7,
+                             "wind_direction":  119
+                         },
+                         {
+                             "timestamp":  "2025-12-25 19:00:00",
+                             "temperature":  22.6,
+                             "relative_humidity":  46,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  66,
+                             "wind_speed":  9.4,
+                             "wind_direction":  121
+                         },
+                         {
+                             "timestamp":  "2025-12-25 20:00:00",
+                             "temperature":  21.7,
+                             "relative_humidity":  52,
+                             "precipitation":  0,
+                             "surface_pressure":  914.2,
+                             "cloud_cover":  54,
+                             "wind_speed":  7.6,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-25 21:00:00",
+                             "temperature":  20.3,
+                             "relative_humidity":  59,
+                             "precipitation":  0,
+                             "surface_pressure":  914.2,
+                             "cloud_cover":  36,
+                             "wind_speed":  9.7,
+                             "wind_direction":  109
+                         },
+                         {
+                             "timestamp":  "2025-12-25 22:00:00",
+                             "temperature":  19.5,
+                             "relative_humidity":  70,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  8,
+                             "wind_speed":  10.7,
+                             "wind_direction":  117
+                         },
+                         {
+                             "timestamp":  "2025-12-25 23:00:00",
+                             "temperature":  19,
+                             "relative_humidity":  81,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  48,
+                             "wind_speed":  12.3,
+                             "wind_direction":  100
+                         },
+                         {
+                             "timestamp":  "2025-12-26 00:00:00",
+                             "temperature":  18.2,
+                             "relative_humidity":  92,
+                             "precipitation":  0,
+                             "surface_pressure":  914,
+                             "cloud_cover":  100,
+                             "wind_speed":  11.1,
+                             "wind_direction":  97
+                         },
+                         {
+                             "timestamp":  "2025-12-26 01:00:00",
+                             "temperature":  18.2,
+                             "relative_humidity":  92,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  100,
+                             "wind_speed":  11.6,
+                             "wind_direction":  96
+                         },
+                         {
+                             "timestamp":  "2025-12-26 02:00:00",
+                             "temperature":  18.2,
+                             "relative_humidity":  90,
+                             "precipitation":  0,
+                             "surface_pressure":  913.1,
+                             "cloud_cover":  100,
+                             "wind_speed":  12.2,
+                             "wind_direction":  98
+                         },
+                         {
+                             "timestamp":  "2025-12-26 03:00:00",
+                             "temperature":  18.1,
+                             "relative_humidity":  89,
+                             "precipitation":  0,
+                             "surface_pressure":  912.7,
+                             "cloud_cover":  100,
+                             "wind_speed":  11.7,
+                             "wind_direction":  94
+                         },
+                         {
+                             "timestamp":  "2025-12-26 04:00:00",
+                             "temperature":  17.8,
+                             "relative_humidity":  89,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  27,
+                             "wind_speed":  10.5,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-26 05:00:00",
+                             "temperature":  17.4,
+                             "relative_humidity":  91,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.9,
+                             "wind_direction":  89
+                         },
+                         {
+                             "timestamp":  "2025-12-26 06:00:00",
+                             "temperature":  17.4,
+                             "relative_humidity":  90,
+                             "precipitation":  0,
+                             "surface_pressure":  913.2,
+                             "cloud_cover":  100,
+                             "wind_speed":  8.8,
+                             "wind_direction":  78
+                         },
+                         {
+                             "timestamp":  "2025-12-26 07:00:00",
+                             "temperature":  17.6,
+                             "relative_humidity":  88,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  96,
+                             "wind_speed":  8.8,
+                             "wind_direction":  71
+                         },
+                         {
+                             "timestamp":  "2025-12-26 08:00:00",
+                             "temperature":  18.9,
+                             "relative_humidity":  79,
+                             "precipitation":  0,
+                             "surface_pressure":  914.9,
+                             "cloud_cover":  62,
+                             "wind_speed":  11.6,
+                             "wind_direction":  74
+                         },
+                         {
+                             "timestamp":  "2025-12-26 09:00:00",
+                             "temperature":  21,
+                             "relative_humidity":  66,
+                             "precipitation":  0,
+                             "surface_pressure":  915.3,
+                             "cloud_cover":  54,
+                             "wind_speed":  12,
+                             "wind_direction":  77
+                         },
+                         {
+                             "timestamp":  "2025-12-26 10:00:00",
+                             "temperature":  23,
+                             "relative_humidity":  54,
+                             "precipitation":  0,
+                             "surface_pressure":  915.2,
+                             "cloud_cover":  66,
+                             "wind_speed":  11.6,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-26 11:00:00",
+                             "temperature":  24.2,
+                             "relative_humidity":  48,
+                             "precipitation":  0,
+                             "surface_pressure":  915.2,
+                             "cloud_cover":  33,
+                             "wind_speed":  12.3,
+                             "wind_direction":  93
+                         },
+                         {
+                             "timestamp":  "2025-12-26 12:00:00",
+                             "temperature":  25.2,
+                             "relative_humidity":  44,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  36,
+                             "wind_speed":  12.6,
+                             "wind_direction":  92
+                         },
+                         {
+                             "timestamp":  "2025-12-26 13:00:00",
+                             "temperature":  25.9,
+                             "relative_humidity":  40,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  38,
+                             "wind_speed":  11.5,
+                             "wind_direction":  98
+                         },
+                         {
+                             "timestamp":  "2025-12-26 14:00:00",
+                             "temperature":  26.4,
+                             "relative_humidity":  37,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  41,
+                             "wind_speed":  11.2,
+                             "wind_direction":  102
+                         },
+                         {
+                             "timestamp":  "2025-12-26 15:00:00",
+                             "temperature":  26.1,
+                             "relative_humidity":  39,
+                             "precipitation":  0,
+                             "surface_pressure":  912.1,
+                             "cloud_cover":  27,
+                             "wind_speed":  11.7,
+                             "wind_direction":  92
+                         },
+                         {
+                             "timestamp":  "2025-12-26 16:00:00",
+                             "temperature":  25.5,
+                             "relative_humidity":  40,
+                             "precipitation":  0,
+                             "surface_pressure":  912.1,
+                             "cloud_cover":  27,
+                             "wind_speed":  11,
+                             "wind_direction":  86
+                         },
+                         {
+                             "timestamp":  "2025-12-26 17:00:00",
+                             "temperature":  24.9,
+                             "relative_humidity":  41,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  14,
+                             "wind_speed":  10.3,
+                             "wind_direction":  86
+                         },
+                         {
+                             "timestamp":  "2025-12-26 18:00:00",
+                             "temperature":  23.7,
+                             "relative_humidity":  45,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  7,
+                             "wind_speed":  9.1,
+                             "wind_direction":  69
+                         },
+                         {
+                             "timestamp":  "2025-12-26 19:00:00",
+                             "temperature":  22.9,
+                             "relative_humidity":  49,
+                             "precipitation":  0,
+                             "surface_pressure":  913.3,
+                             "cloud_cover":  16,
+                             "wind_speed":  8.3,
+                             "wind_direction":  92
+                         },
+                         {
+                             "timestamp":  "2025-12-26 20:00:00",
+                             "temperature":  21.4,
+                             "relative_humidity":  57,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  27,
+                             "wind_speed":  10.1,
+                             "wind_direction":  115
+                         },
+                         {
+                             "timestamp":  "2025-12-26 21:00:00",
+                             "temperature":  20.4,
+                             "relative_humidity":  63,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  1,
+                             "wind_speed":  9.3,
+                             "wind_direction":  117
+                         },
+                         {
+                             "timestamp":  "2025-12-26 22:00:00",
+                             "temperature":  19.3,
+                             "relative_humidity":  67,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  0,
+                             "wind_speed":  9.2,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-26 23:00:00",
+                             "temperature":  18.3,
+                             "relative_humidity":  74,
+                             "precipitation":  0,
+                             "surface_pressure":  913.8,
+                             "cloud_cover":  8,
+                             "wind_speed":  10,
+                             "wind_direction":  104
+                         },
+                         {
+                             "timestamp":  "2025-12-27 00:00:00",
+                             "temperature":  17.4,
+                             "relative_humidity":  83,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  34,
+                             "wind_speed":  10.5,
+                             "wind_direction":  96
+                         },
+                         {
+                             "timestamp":  "2025-12-27 01:00:00",
+                             "temperature":  16.4,
+                             "relative_humidity":  94,
+                             "precipitation":  0,
+                             "surface_pressure":  913.1,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.7,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-27 02:00:00",
+                             "temperature":  16.2,
+                             "relative_humidity":  96,
+                             "precipitation":  0,
+                             "surface_pressure":  912.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.8,
+                             "wind_direction":  89
+                         },
+                         {
+                             "timestamp":  "2025-12-27 03:00:00",
+                             "temperature":  16.6,
+                             "relative_humidity":  91,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  63,
+                             "wind_speed":  10.7,
+                             "wind_direction":  84
+                         },
+                         {
+                             "timestamp":  "2025-12-27 04:00:00",
+                             "temperature":  16.5,
+                             "relative_humidity":  90,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  20,
+                             "wind_speed":  10.5,
+                             "wind_direction":  77
+                         },
+                         {
+                             "timestamp":  "2025-12-27 05:00:00",
+                             "temperature":  16.2,
+                             "relative_humidity":  91,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.6,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-27 06:00:00",
+                             "temperature":  16.2,
+                             "relative_humidity":  90,
+                             "precipitation":  0,
+                             "surface_pressure":  913.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  11,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-27 07:00:00",
+                             "temperature":  16.2,
+                             "relative_humidity":  88,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  95,
+                             "wind_speed":  10.1,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-27 08:00:00",
+                             "temperature":  17.7,
+                             "relative_humidity":  75,
+                             "precipitation":  0,
+                             "surface_pressure":  915.1,
+                             "cloud_cover":  43,
+                             "wind_speed":  9.1,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-27 09:00:00",
+                             "temperature":  20.2,
+                             "relative_humidity":  58,
+                             "precipitation":  0,
+                             "surface_pressure":  915.8,
+                             "cloud_cover":  48,
+                             "wind_speed":  10.1,
+                             "wind_direction":  70
+                         },
+                         {
+                             "timestamp":  "2025-12-27 10:00:00",
+                             "temperature":  22.3,
+                             "relative_humidity":  41,
+                             "precipitation":  0,
+                             "surface_pressure":  915.7,
+                             "cloud_cover":  67,
+                             "wind_speed":  10.8,
+                             "wind_direction":  62
+                         },
+                         {
+                             "timestamp":  "2025-12-27 11:00:00",
+                             "temperature":  23.5,
+                             "relative_humidity":  36,
+                             "precipitation":  0,
+                             "surface_pressure":  915.5,
+                             "cloud_cover":  2,
+                             "wind_speed":  10.6,
+                             "wind_direction":  64
+                         },
+                         {
+                             "timestamp":  "2025-12-27 12:00:00",
+                             "temperature":  24.9,
+                             "relative_humidity":  31,
+                             "precipitation":  0,
+                             "surface_pressure":  914.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  9.8,
+                             "wind_direction":  73
+                         },
+                         {
+                             "timestamp":  "2025-12-27 13:00:00",
+                             "temperature":  25.7,
+                             "relative_humidity":  29,
+                             "precipitation":  0,
+                             "surface_pressure":  913.6,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.1,
+                             "wind_direction":  79
+                         },
+                         {
+                             "timestamp":  "2025-12-27 14:00:00",
+                             "temperature":  26,
+                             "relative_humidity":  29,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.3,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-27 15:00:00",
+                             "temperature":  25.7,
+                             "relative_humidity":  30,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.4,
+                             "wind_direction":  89
+                         },
+                         {
+                             "timestamp":  "2025-12-27 16:00:00",
+                             "temperature":  25,
+                             "relative_humidity":  34,
+                             "precipitation":  0,
+                             "surface_pressure":  912.3,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.6,
+                             "wind_direction":  93
+                         },
+                         {
+                             "timestamp":  "2025-12-27 17:00:00",
+                             "temperature":  23.9,
+                             "relative_humidity":  40,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  0,
+                             "wind_speed":  11.6,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-27 18:00:00",
+                             "temperature":  22.9,
+                             "relative_humidity":  47,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  1,
+                             "wind_speed":  9.7,
+                             "wind_direction":  80
+                         },
+                         {
+                             "timestamp":  "2025-12-27 19:00:00",
+                             "temperature":  21.9,
+                             "relative_humidity":  52,
+                             "precipitation":  0,
+                             "surface_pressure":  913.5,
+                             "cloud_cover":  13,
+                             "wind_speed":  9.4,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-27 20:00:00",
+                             "temperature":  20.8,
+                             "relative_humidity":  57,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  3,
+                             "wind_speed":  9.4,
+                             "wind_direction":  94
+                         },
+                         {
+                             "timestamp":  "2025-12-27 21:00:00",
+                             "temperature":  19.9,
+                             "relative_humidity":  60,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  0,
+                             "wind_speed":  10.8,
+                             "wind_direction":  100
+                         },
+                         {
+                             "timestamp":  "2025-12-27 22:00:00",
+                             "temperature":  19.3,
+                             "relative_humidity":  63,
+                             "precipitation":  0,
+                             "surface_pressure":  914,
+                             "cloud_cover":  0,
+                             "wind_speed":  9.6,
+                             "wind_direction":  94
+                         },
+                         {
+                             "timestamp":  "2025-12-27 23:00:00",
+                             "temperature":  18.3,
+                             "relative_humidity":  73,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  0,
+                             "wind_speed":  11.8,
+                             "wind_direction":  102
+                         },
+                         {
+                             "timestamp":  "2025-12-28 00:00:00",
+                             "temperature":  17.1,
+                             "relative_humidity":  83,
+                             "precipitation":  0,
+                             "surface_pressure":  914,
+                             "cloud_cover":  0,
+                             "wind_speed":  12,
+                             "wind_direction":  99
+                         },
+                         {
+                             "timestamp":  "2025-12-28 01:00:00",
+                             "temperature":  16.1,
+                             "relative_humidity":  91,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  5,
+                             "wind_speed":  11.2,
+                             "wind_direction":  84
+                         },
+                         {
+                             "timestamp":  "2025-12-28 02:00:00",
+                             "temperature":  15.5,
+                             "relative_humidity":  95,
+                             "precipitation":  0,
+                             "surface_pressure":  912.8,
+                             "cloud_cover":  57,
+                             "wind_speed":  11.4,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-28 03:00:00",
+                             "temperature":  15.2,
+                             "relative_humidity":  96,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.8,
+                             "wind_direction":  89
+                         },
+                         {
+                             "timestamp":  "2025-12-28 04:00:00",
+                             "temperature":  15,
+                             "relative_humidity":  95,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  87,
+                             "wind_speed":  10.6,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-28 05:00:00",
+                             "temperature":  15,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.6,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-28 06:00:00",
+                             "temperature":  15,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  913.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  8.7,
+                             "wind_direction":  97
+                         },
+                         {
+                             "timestamp":  "2025-12-28 07:00:00",
+                             "temperature":  15,
+                             "relative_humidity":  98,
+                             "precipitation":  0,
+                             "surface_pressure":  914.4,
+                             "cloud_cover":  100,
+                             "wind_speed":  7.7,
+                             "wind_direction":  90
+                         },
+                         {
+                             "timestamp":  "2025-12-28 08:00:00",
+                             "temperature":  16,
+                             "relative_humidity":  89,
+                             "precipitation":  0,
+                             "surface_pressure":  915.5,
+                             "cloud_cover":  97,
+                             "wind_speed":  8.4,
+                             "wind_direction":  99
+                         },
+                         {
+                             "timestamp":  "2025-12-28 09:00:00",
+                             "temperature":  19.4,
+                             "relative_humidity":  70,
+                             "precipitation":  0,
+                             "surface_pressure":  916.2,
+                             "cloud_cover":  1,
+                             "wind_speed":  6.3,
+                             "wind_direction":  88
+                         },
+                         {
+                             "timestamp":  "2025-12-28 10:00:00",
+                             "temperature":  22.1,
+                             "relative_humidity":  53,
+                             "precipitation":  0,
+                             "surface_pressure":  916.3,
+                             "cloud_cover":  0,
+                             "wind_speed":  5.8,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-28 11:00:00",
+                             "temperature":  23.3,
+                             "relative_humidity":  48,
+                             "precipitation":  0,
+                             "surface_pressure":  916.4,
+                             "cloud_cover":  2,
+                             "wind_speed":  5.1,
+                             "wind_direction":  72
+                         },
+                         {
+                             "timestamp":  "2025-12-28 12:00:00",
+                             "temperature":  25.1,
+                             "relative_humidity":  41,
+                             "precipitation":  0,
+                             "surface_pressure":  915.6,
+                             "cloud_cover":  1,
+                             "wind_speed":  6,
+                             "wind_direction":  74
+                         },
+                         {
+                             "timestamp":  "2025-12-28 13:00:00",
+                             "temperature":  26.1,
+                             "relative_humidity":  38,
+                             "precipitation":  0,
+                             "surface_pressure":  914.4,
+                             "cloud_cover":  36,
+                             "wind_speed":  6.3,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-28 14:00:00",
+                             "temperature":  26.6,
+                             "relative_humidity":  38,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  66,
+                             "wind_speed":  7.2,
+                             "wind_direction":  104
+                         },
+                         {
+                             "timestamp":  "2025-12-28 15:00:00",
+                             "temperature":  26.4,
+                             "relative_humidity":  39,
+                             "precipitation":  0,
+                             "surface_pressure":  913.1,
+                             "cloud_cover":  7,
+                             "wind_speed":  8.7,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-28 16:00:00",
+                             "temperature":  25.7,
+                             "relative_humidity":  41,
+                             "precipitation":  0,
+                             "surface_pressure":  913,
+                             "cloud_cover":  13,
+                             "wind_speed":  8.5,
+                             "wind_direction":  96
+                         },
+                         {
+                             "timestamp":  "2025-12-28 17:00:00",
+                             "temperature":  24.9,
+                             "relative_humidity":  44,
+                             "precipitation":  0,
+                             "surface_pressure":  913.3,
+                             "cloud_cover":  18,
+                             "wind_speed":  9.4,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-28 18:00:00",
+                             "temperature":  24,
+                             "relative_humidity":  47,
+                             "precipitation":  0,
+                             "surface_pressure":  913.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  7.2,
+                             "wind_direction":  84
+                         },
+                         {
+                             "timestamp":  "2025-12-28 19:00:00",
+                             "temperature":  23.4,
+                             "relative_humidity":  50,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  3,
+                             "wind_speed":  7.8,
+                             "wind_direction":  75
+                         },
+                         {
+                             "timestamp":  "2025-12-28 20:00:00",
+                             "temperature":  22.2,
+                             "relative_humidity":  54,
+                             "precipitation":  0,
+                             "surface_pressure":  914.6,
+                             "cloud_cover":  5,
+                             "wind_speed":  9.4,
+                             "wind_direction":  94
+                         },
+                         {
+                             "timestamp":  "2025-12-28 21:00:00",
+                             "temperature":  20.9,
+                             "relative_humidity":  61,
+                             "precipitation":  0,
+                             "surface_pressure":  914.5,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.2,
+                             "wind_direction":  75
+                         },
+                         {
+                             "timestamp":  "2025-12-28 22:00:00",
+                             "temperature":  19.7,
+                             "relative_humidity":  66,
+                             "precipitation":  0,
+                             "surface_pressure":  914.2,
+                             "cloud_cover":  48,
+                             "wind_speed":  9.9,
+                             "wind_direction":  81
+                         },
+                         {
+                             "timestamp":  "2025-12-28 23:00:00",
+                             "temperature":  18.7,
+                             "relative_humidity":  74,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  93,
+                             "wind_speed":  11.7,
+                             "wind_direction":  86
+                         },
+                         {
+                             "timestamp":  "2025-12-29 00:00:00",
+                             "temperature":  17.8,
+                             "relative_humidity":  80,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  85,
+                             "wind_speed":  12.4,
+                             "wind_direction":  88
+                         },
+                         {
+                             "timestamp":  "2025-12-29 01:00:00",
+                             "temperature":  16.7,
+                             "relative_humidity":  87,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  69,
+                             "wind_speed":  12.2,
+                             "wind_direction":  89
+                         },
+                         {
+                             "timestamp":  "2025-12-29 02:00:00",
+                             "temperature":  15.7,
+                             "relative_humidity":  93,
+                             "precipitation":  0,
+                             "surface_pressure":  912.2,
+                             "cloud_cover":  82,
+                             "wind_speed":  11.9,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-29 03:00:00",
+                             "temperature":  15.1,
+                             "relative_humidity":  97,
+                             "precipitation":  0,
+                             "surface_pressure":  912,
+                             "cloud_cover":  100,
+                             "wind_speed":  11.9,
+                             "wind_direction":  80
+                         },
+                         {
+                             "timestamp":  "2025-12-29 04:00:00",
+                             "temperature":  15,
+                             "relative_humidity":  98,
+                             "precipitation":  0,
+                             "surface_pressure":  912.4,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.7,
+                             "wind_direction":  78
+                         },
+                         {
+                             "timestamp":  "2025-12-29 05:00:00",
+                             "temperature":  15.3,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.8,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-29 06:00:00",
+                             "temperature":  15.2,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  913.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.8,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-29 07:00:00",
+                             "temperature":  15.5,
+                             "relative_humidity":  96,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.1,
+                             "wind_direction":  86
+                         },
+                         {
+                             "timestamp":  "2025-12-29 08:00:00",
+                             "temperature":  17.1,
+                             "relative_humidity":  85,
+                             "precipitation":  0,
+                             "surface_pressure":  915.5,
+                             "cloud_cover":  81,
+                             "wind_speed":  11.4,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-29 09:00:00",
+                             "temperature":  19.9,
+                             "relative_humidity":  70,
+                             "precipitation":  0,
+                             "surface_pressure":  916,
+                             "cloud_cover":  93,
+                             "wind_speed":  7.7,
+                             "wind_direction":  91
+                         },
+                         {
+                             "timestamp":  "2025-12-29 10:00:00",
+                             "temperature":  22.4,
+                             "relative_humidity":  58,
+                             "precipitation":  0,
+                             "surface_pressure":  915.9,
+                             "cloud_cover":  5,
+                             "wind_speed":  6.5,
+                             "wind_direction":  88
+                         },
+                         {
+                             "timestamp":  "2025-12-29 11:00:00",
+                             "temperature":  23.9,
+                             "relative_humidity":  52,
+                             "precipitation":  0,
+                             "surface_pressure":  915.7,
+                             "cloud_cover":  4,
+                             "wind_speed":  6.6,
+                             "wind_direction":  106
+                         },
+                         {
+                             "timestamp":  "2025-12-29 12:00:00",
+                             "temperature":  25.7,
+                             "relative_humidity":  45,
+                             "precipitation":  0,
+                             "surface_pressure":  915.2,
+                             "cloud_cover":  0,
+                             "wind_speed":  6.2,
+                             "wind_direction":  105
+                         },
+                         {
+                             "timestamp":  "2025-12-29 13:00:00",
+                             "temperature":  26.7,
+                             "relative_humidity":  42,
+                             "precipitation":  0,
+                             "surface_pressure":  914.2,
+                             "cloud_cover":  0,
+                             "wind_speed":  6.4,
+                             "wind_direction":  106
+                         },
+                         {
+                             "timestamp":  "2025-12-29 14:00:00",
+                             "temperature":  27.2,
+                             "relative_humidity":  38,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  0,
+                             "wind_speed":  7.2,
+                             "wind_direction":  104
+                         },
+                         {
+                             "timestamp":  "2025-12-29 15:00:00",
+                             "temperature":  27.2,
+                             "relative_humidity":  37,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  21,
+                             "wind_speed":  8.2,
+                             "wind_direction":  109
+                         },
+                         {
+                             "timestamp":  "2025-12-29 16:00:00",
+                             "temperature":  26.6,
+                             "relative_humidity":  38,
+                             "precipitation":  0,
+                             "surface_pressure":  912.8,
+                             "cloud_cover":  27,
+                             "wind_speed":  7.7,
+                             "wind_direction":  106
+                         },
+                         {
+                             "timestamp":  "2025-12-29 17:00:00",
+                             "temperature":  25.9,
+                             "relative_humidity":  42,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  15,
+                             "wind_speed":  9.3,
+                             "wind_direction":  106
+                         },
+                         {
+                             "timestamp":  "2025-12-29 18:00:00",
+                             "temperature":  24.8,
+                             "relative_humidity":  47,
+                             "precipitation":  0,
+                             "surface_pressure":  913.5,
+                             "cloud_cover":  27,
+                             "wind_speed":  8.6,
+                             "wind_direction":  91
+                         },
+                         {
+                             "timestamp":  "2025-12-29 19:00:00",
+                             "temperature":  24,
+                             "relative_humidity":  49,
+                             "precipitation":  0,
+                             "surface_pressure":  913.9,
+                             "cloud_cover":  20,
+                             "wind_speed":  9.7,
+                             "wind_direction":  91
+                         },
+                         {
+                             "timestamp":  "2025-12-29 20:00:00",
+                             "temperature":  22.7,
+                             "relative_humidity":  56,
+                             "precipitation":  0,
+                             "surface_pressure":  914.5,
+                             "cloud_cover":  1,
+                             "wind_speed":  10.4,
+                             "wind_direction":  122
+                         },
+                         {
+                             "timestamp":  "2025-12-29 21:00:00",
+                             "temperature":  21.6,
+                             "relative_humidity":  59,
+                             "precipitation":  0,
+                             "surface_pressure":  914.7,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.4,
+                             "wind_direction":  115
+                         },
+                         {
+                             "timestamp":  "2025-12-29 22:00:00",
+                             "temperature":  20.5,
+                             "relative_humidity":  65,
+                             "precipitation":  0,
+                             "surface_pressure":  914.7,
+                             "cloud_cover":  0,
+                             "wind_speed":  7.8,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-29 23:00:00",
+                             "temperature":  19.6,
+                             "relative_humidity":  74,
+                             "precipitation":  0,
+                             "surface_pressure":  914.4,
+                             "cloud_cover":  88,
+                             "wind_speed":  9.5,
+                             "wind_direction":  65
+                         },
+                         {
+                             "timestamp":  "2025-12-30 00:00:00",
+                             "temperature":  18.8,
+                             "relative_humidity":  80,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  100,
+                             "wind_speed":  9,
+                             "wind_direction":  87
+                         },
+                         {
+                             "timestamp":  "2025-12-30 01:00:00",
+                             "temperature":  17.9,
+                             "relative_humidity":  87,
+                             "precipitation":  0,
+                             "surface_pressure":  913.1,
+                             "cloud_cover":  98,
+                             "wind_speed":  10,
+                             "wind_direction":  83
+                         },
+                         {
+                             "timestamp":  "2025-12-30 02:00:00",
+                             "temperature":  17,
+                             "relative_humidity":  94,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.2,
+                             "wind_direction":  72
+                         },
+                         {
+                             "timestamp":  "2025-12-30 03:00:00",
+                             "temperature":  16.7,
+                             "relative_humidity":  96,
+                             "precipitation":  0,
+                             "surface_pressure":  912.4,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.2,
+                             "wind_direction":  73
+                         },
+                         {
+                             "timestamp":  "2025-12-30 04:00:00",
+                             "temperature":  17,
+                             "relative_humidity":  93,
+                             "precipitation":  0,
+                             "surface_pressure":  912.6,
+                             "cloud_cover":  100,
+                             "wind_speed":  9.5,
+                             "wind_direction":  71
+                         },
+                         {
+                             "timestamp":  "2025-12-30 05:00:00",
+                             "temperature":  16.6,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  6.7,
+                             "wind_direction":  71
+                         },
+                         {
+                             "timestamp":  "2025-12-30 06:00:00",
+                             "temperature":  16.5,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  913.6,
+                             "cloud_cover":  100,
+                             "wind_speed":  6.1,
+                             "wind_direction":  76
+                         },
+                         {
+                             "timestamp":  "2025-12-30 07:00:00",
+                             "temperature":  16.8,
+                             "relative_humidity":  96,
+                             "precipitation":  0,
+                             "surface_pressure":  914.5,
+                             "cloud_cover":  100,
+                             "wind_speed":  6,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-30 08:00:00",
+                             "temperature":  18.3,
+                             "relative_humidity":  84,
+                             "precipitation":  0,
+                             "surface_pressure":  915.4,
+                             "cloud_cover":  77,
+                             "wind_speed":  6.2,
+                             "wind_direction":  111
+                         },
+                         {
+                             "timestamp":  "2025-12-30 09:00:00",
+                             "temperature":  21.1,
+                             "relative_humidity":  69,
+                             "precipitation":  0,
+                             "surface_pressure":  916.2,
+                             "cloud_cover":  16,
+                             "wind_speed":  2.2,
+                             "wind_direction":  104
+                         },
+                         {
+                             "timestamp":  "2025-12-30 10:00:00",
+                             "temperature":  23.5,
+                             "relative_humidity":  57,
+                             "precipitation":  0,
+                             "surface_pressure":  916.3,
+                             "cloud_cover":  13,
+                             "wind_speed":  1,
+                             "wind_direction":  22
+                         },
+                         {
+                             "timestamp":  "2025-12-30 11:00:00",
+                             "temperature":  24.7,
+                             "relative_humidity":  51,
+                             "precipitation":  0,
+                             "surface_pressure":  915.7,
+                             "cloud_cover":  19,
+                             "wind_speed":  2,
+                             "wind_direction":  355
+                         },
+                         {
+                             "timestamp":  "2025-12-30 12:00:00",
+                             "temperature":  26.9,
+                             "relative_humidity":  42,
+                             "precipitation":  0,
+                             "surface_pressure":  914.9,
+                             "cloud_cover":  44,
+                             "wind_speed":  1.7,
+                             "wind_direction":  342
+                         },
+                         {
+                             "timestamp":  "2025-12-30 13:00:00",
+                             "temperature":  28,
+                             "relative_humidity":  37,
+                             "precipitation":  0,
+                             "surface_pressure":  913.8,
+                             "cloud_cover":  62,
+                             "wind_speed":  1.8,
+                             "wind_direction":  349
+                         },
+                         {
+                             "timestamp":  "2025-12-30 14:00:00",
+                             "temperature":  28.7,
+                             "relative_humidity":  34,
+                             "precipitation":  0,
+                             "surface_pressure":  912.7,
+                             "cloud_cover":  63,
+                             "wind_speed":  3.1,
+                             "wind_direction":  36
+                         },
+                         {
+                             "timestamp":  "2025-12-30 15:00:00",
+                             "temperature":  28.7,
+                             "relative_humidity":  32,
+                             "precipitation":  0,
+                             "surface_pressure":  912.2,
+                             "cloud_cover":  100,
+                             "wind_speed":  5.9,
+                             "wind_direction":  52
+                         },
+                         {
+                             "timestamp":  "2025-12-30 16:00:00",
+                             "temperature":  27.4,
+                             "relative_humidity":  35,
+                             "precipitation":  0,
+                             "surface_pressure":  912,
+                             "cloud_cover":  98,
+                             "wind_speed":  5.4,
+                             "wind_direction":  53
+                         },
+                         {
+                             "timestamp":  "2025-12-30 17:00:00",
+                             "temperature":  27.1,
+                             "relative_humidity":  37,
+                             "precipitation":  0,
+                             "surface_pressure":  911.9,
+                             "cloud_cover":  91,
+                             "wind_speed":  6.6,
+                             "wind_direction":  99
+                         },
+                         {
+                             "timestamp":  "2025-12-30 18:00:00",
+                             "temperature":  25.5,
+                             "relative_humidity":  41,
+                             "precipitation":  0,
+                             "surface_pressure":  912.5,
+                             "cloud_cover":  49,
+                             "wind_speed":  3.7,
+                             "wind_direction":  129
+                         },
+                         {
+                             "timestamp":  "2025-12-30 19:00:00",
+                             "temperature":  24.6,
+                             "relative_humidity":  47,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  16,
+                             "wind_speed":  2,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-30 20:00:00",
+                             "temperature":  24,
+                             "relative_humidity":  46,
+                             "precipitation":  0,
+                             "surface_pressure":  913.8,
+                             "cloud_cover":  15,
+                             "wind_speed":  3.8,
+                             "wind_direction":  17
+                         },
+                         {
+                             "timestamp":  "2025-12-30 21:00:00",
+                             "temperature":  22.7,
+                             "relative_humidity":  49,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  10,
+                             "wind_speed":  5.3,
+                             "wind_direction":  55
+                         },
+                         {
+                             "timestamp":  "2025-12-30 22:00:00",
+                             "temperature":  21.5,
+                             "relative_humidity":  51,
+                             "precipitation":  0,
+                             "surface_pressure":  914.1,
+                             "cloud_cover":  9,
+                             "wind_speed":  6.9,
+                             "wind_direction":  43
+                         },
+                         {
+                             "timestamp":  "2025-12-30 23:00:00",
+                             "temperature":  20.4,
+                             "relative_humidity":  61,
+                             "precipitation":  0,
+                             "surface_pressure":  913.4,
+                             "cloud_cover":  1,
+                             "wind_speed":  7.4,
+                             "wind_direction":  64
+                         },
+                         {
+                             "timestamp":  "2025-12-31 00:00:00",
+                             "temperature":  19.4,
+                             "relative_humidity":  74,
+                             "precipitation":  0,
+                             "surface_pressure":  913,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.5,
+                             "wind_direction":  85
+                         },
+                         {
+                             "timestamp":  "2025-12-31 01:00:00",
+                             "temperature":  19,
+                             "relative_humidity":  81,
+                             "precipitation":  0,
+                             "surface_pressure":  912.4,
+                             "cloud_cover":  0,
+                             "wind_speed":  8.8,
+                             "wind_direction":  102
+                         },
+                         {
+                             "timestamp":  "2025-12-31 02:00:00",
+                             "temperature":  18.3,
+                             "relative_humidity":  87,
+                             "precipitation":  0,
+                             "surface_pressure":  911.6,
+                             "cloud_cover":  1,
+                             "wind_speed":  9.1,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-31 03:00:00",
+                             "temperature":  17.6,
+                             "relative_humidity":  93,
+                             "precipitation":  0,
+                             "surface_pressure":  911.3,
+                             "cloud_cover":  73,
+                             "wind_speed":  8,
+                             "wind_direction":  99
+                         },
+                         {
+                             "timestamp":  "2025-12-31 04:00:00",
+                             "temperature":  17,
+                             "relative_humidity":  98,
+                             "precipitation":  0,
+                             "surface_pressure":  911,
+                             "cloud_cover":  100,
+                             "wind_speed":  7.9,
+                             "wind_direction":  103
+                         },
+                         {
+                             "timestamp":  "2025-12-31 05:00:00",
+                             "temperature":  17.2,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  911.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  10.2,
+                             "wind_direction":  120
+                         },
+                         {
+                             "timestamp":  "2025-12-31 06:00:00",
+                             "temperature":  17.2,
+                             "relative_humidity":  99,
+                             "precipitation":  0,
+                             "surface_pressure":  912.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  7.4,
+                             "wind_direction":  112
+                         },
+                         {
+                             "timestamp":  "2025-12-31 07:00:00",
+                             "temperature":  17.3,
+                             "relative_humidity":  98,
+                             "precipitation":  0,
+                             "surface_pressure":  912.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  6.5,
+                             "wind_direction":  95
+                         },
+                         {
+                             "timestamp":  "2025-12-31 08:00:00",
+                             "temperature":  18.9,
+                             "relative_humidity":  88,
+                             "precipitation":  0,
+                             "surface_pressure":  913.7,
+                             "cloud_cover":  30,
+                             "wind_speed":  4.7,
+                             "wind_direction":  99
+                         },
+                         {
+                             "timestamp":  "2025-12-31 09:00:00",
+                             "temperature":  22.1,
+                             "relative_humidity":  69,
+                             "precipitation":  0,
+                             "surface_pressure":  914.6,
+                             "cloud_cover":  2,
+                             "wind_speed":  1.9,
+                             "wind_direction":  107
+                         },
+                         {
+                             "timestamp":  "2025-12-31 10:00:00",
+                             "temperature":  24.6,
+                             "relative_humidity":  57,
+                             "precipitation":  0,
+                             "surface_pressure":  914.6,
+                             "cloud_cover":  0,
+                             "wind_speed":  1.5,
+                             "wind_direction":  201
+                         },
+                         {
+                             "timestamp":  "2025-12-31 11:00:00",
+                             "temperature":  25.6,
+                             "relative_humidity":  51,
+                             "precipitation":  0,
+                             "surface_pressure":  914.3,
+                             "cloud_cover":  48,
+                             "wind_speed":  3.3,
+                             "wind_direction":  209
+                         },
+                         {
+                             "timestamp":  "2025-12-31 12:00:00",
+                             "temperature":  27.6,
+                             "relative_humidity":  42,
+                             "precipitation":  0,
+                             "surface_pressure":  913.6,
+                             "cloud_cover":  76,
+                             "wind_speed":  5.9,
+                             "wind_direction":  200
+                         },
+                         {
+                             "timestamp":  "2025-12-31 13:00:00",
+                             "temperature":  28.2,
+                             "relative_humidity":  40,
+                             "precipitation":  0,
+                             "surface_pressure":  912.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  8.7,
+                             "wind_direction":  207
+                         },
+                         {
+                             "timestamp":  "2025-12-31 14:00:00",
+                             "temperature":  27.5,
+                             "relative_humidity":  42,
+                             "precipitation":  0,
+                             "surface_pressure":  911.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  8.8,
+                             "wind_direction":  208
+                         },
+                         {
+                             "timestamp":  "2025-12-31 15:00:00",
+                             "temperature":  27.2,
+                             "relative_humidity":  44,
+                             "precipitation":  0.1,
+                             "surface_pressure":  910.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  6.1,
+                             "wind_direction":  210
+                         },
+                         {
+                             "timestamp":  "2025-12-31 16:00:00",
+                             "temperature":  27.1,
+                             "relative_humidity":  44,
+                             "precipitation":  0.1,
+                             "surface_pressure":  910.8,
+                             "cloud_cover":  100,
+                             "wind_speed":  3.6,
+                             "wind_direction":  213
+                         },
+                         {
+                             "timestamp":  "2025-12-31 17:00:00",
+                             "temperature":  26.9,
+                             "relative_humidity":  44,
+                             "precipitation":  0,
+                             "surface_pressure":  910.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  4.9,
+                             "wind_direction":  174
+                         },
+                         {
+                             "timestamp":  "2025-12-31 18:00:00",
+                             "temperature":  26.1,
+                             "relative_humidity":  47,
+                             "precipitation":  0.1,
+                             "surface_pressure":  911.2,
+                             "cloud_cover":  99,
+                             "wind_speed":  3.9,
+                             "wind_direction":  127
+                         },
+                         {
+                             "timestamp":  "2025-12-31 19:00:00",
+                             "temperature":  25.3,
+                             "relative_humidity":  53,
+                             "precipitation":  0,
+                             "surface_pressure":  912,
+                             "cloud_cover":  99,
+                             "wind_speed":  4,
+                             "wind_direction":  82
+                         },
+                         {
+                             "timestamp":  "2025-12-31 20:00:00",
+                             "temperature":  24.3,
+                             "relative_humidity":  65,
+                             "precipitation":  0,
+                             "surface_pressure":  912.3,
+                             "cloud_cover":  100,
+                             "wind_speed":  2.2,
+                             "wind_direction":  90
+                         },
+                         {
+                             "timestamp":  "2025-12-31 21:00:00",
+                             "temperature":  23.2,
+                             "relative_humidity":  63,
+                             "precipitation":  0.1,
+                             "surface_pressure":  913,
+                             "cloud_cover":  100,
+                             "wind_speed":  5,
+                             "wind_direction":  218
+                         },
+                         {
+                             "timestamp":  "2025-12-31 22:00:00",
+                             "temperature":  22.5,
+                             "relative_humidity":  67,
+                             "precipitation":  0.1,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  89,
+                             "wind_speed":  3,
+                             "wind_direction":  284
+                         },
+                         {
+                             "timestamp":  "2025-12-31 23:00:00",
+                             "temperature":  21.4,
+                             "relative_humidity":  75,
+                             "precipitation":  0,
+                             "surface_pressure":  912.9,
+                             "cloud_cover":  100,
+                             "wind_speed":  5.5,
+                             "wind_direction":  128
+                         }
+                     ]
+}

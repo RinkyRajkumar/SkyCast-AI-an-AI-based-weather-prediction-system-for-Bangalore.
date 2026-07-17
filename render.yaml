@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: skycast-ai-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: SKYCAST_CORS_ORIGINS
+        sync: false
+      - key: SKYCAST_CORS_ALLOW_CREDENTIALS
+        value: "false"
+      - key: SKYCAST_CORS_ORIGIN_REGEX
+        sync: false
