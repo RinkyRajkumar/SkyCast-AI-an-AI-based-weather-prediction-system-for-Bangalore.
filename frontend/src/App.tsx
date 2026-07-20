@@ -8,6 +8,7 @@ import {
 } from './api/weatherApi'
 import { EnvironmentalInsights } from './components/EnvironmentalInsights'
 import { ErrorMessage } from './components/ErrorMessage'
+import { ForecastConfidence } from './components/ForecastConfidence'
 import { ForecastCard } from './components/ForecastCard'
 import { HourlyForecastStrip } from './components/HourlyForecastStrip'
 import { LoadingState } from './components/LoadingState'
@@ -169,6 +170,14 @@ export function App() {
             <div className="panel weather-placeholder">Live weather for {selectedLocation.name} will appear here shortly.</div>
           )}
         </section>
+
+        {!isLoading && prediction ? (
+          <ForecastConfidence
+            forecasts={prediction.forecasts}
+            observations={observations}
+            isModelForecast={forecastMode === 'model'}
+          />
+        ) : null}
 
         {error ? <ErrorMessage message={error} onDismiss={() => setError('')} onRetry={() => setReloadKey((value) => value + 1)} /> : null}
         {isLoading ? (

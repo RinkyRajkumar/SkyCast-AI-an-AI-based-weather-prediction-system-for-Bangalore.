@@ -21,7 +21,8 @@ describe('ForecastCard', () => {
       />,
     )
 
-    expect(screen.getByText('Today')).toBeInTheDocument()
+    expect(screen.getByText('Sat')).toBeInTheDocument()
+    expect(screen.getByText('18 Jul')).toBeInTheDocument()
     expect(screen.getByText('25')).toBeInTheDocument()
     expect(screen.getByText('71%')).toBeInTheDocument()
     expect(screen.getByText('1.80 mm')).toBeInTheDocument()
