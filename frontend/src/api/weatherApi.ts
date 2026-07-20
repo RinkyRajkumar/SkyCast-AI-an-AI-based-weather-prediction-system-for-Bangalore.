@@ -1,8 +1,11 @@
 import axios, { AxiosError } from 'axios'
 import type {
-  HealthResponse,
+  EnvironmentalInsights,
+  ClimateNewsResponse,
   ObservationHistoryResponse,
   PredictionResponse,
+  LocationSearchResponse,
+  WeatherLocation,
   WeatherObservation,
 } from '../types'
 
@@ -15,13 +18,35 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
-  const response = await apiClient.get<HealthResponse>('/health', { signal })
+function locationParams(location?: WeatherLocation) {
+  if (!location) return undefined
+  return {
+    name: location.name,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    timezone: location.timezone,
+    country: location.country ?? undefined,
+    admin1: location.admin1 ?? undefined,
+  }
+}
+
+export async function getLocations(query: string, signal?: AbortSignal): Promise<LocationSearchResponse> {
+  const response = await apiClient.get<LocationSearchResponse>('/api/locations', { params: { query }, signal })
   return response.data
 }
 
-export async function getObservations(signal?: AbortSignal): Promise<ObservationHistoryResponse> {
-  const response = await apiClient.get<ObservationHistoryResponse>('/api/observations', { signal })
+export async function getObservations(location?: WeatherLocation, signal?: AbortSignal): Promise<ObservationHistoryResponse> {
+  const response = await apiClient.get<ObservationHistoryResponse>('/api/observations', { params: locationParams(location), signal })
+  return response.data
+}
+
+export async function getEnvironment(location?: WeatherLocation, signal?: AbortSignal): Promise<EnvironmentalInsights> {
+  const response = await apiClient.get<EnvironmentalInsights>('/api/environment', { params: locationParams(location), signal })
+  return response.data
+}
+
+export async function getClimateNews(location?: WeatherLocation, signal?: AbortSignal): Promise<ClimateNewsResponse> {
+  const response = await apiClient.get<ClimateNewsResponse>('/api/climate-news', { params: locationParams(location), signal })
   return response.data
 }
 

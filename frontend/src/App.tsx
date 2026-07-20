@@ -1,17 +1,29 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import {
   getApiErrorMessage,
-  getHealth,
+  getClimateNews,
+  getEnvironment,
   getObservations,
   getPrediction,
-  isBackendUnavailable,
 } from './api/weatherApi'
-import { CurrentWeatherCard } from './components/CurrentWeatherCard'
+import { EnvironmentalInsights } from './components/EnvironmentalInsights'
 import { ErrorMessage } from './components/ErrorMessage'
+import { ForecastConfidence } from './components/ForecastConfidence'
 import { ForecastCard } from './components/ForecastCard'
+import { HourlyForecastStrip } from './components/HourlyForecastStrip'
 import { LoadingState } from './components/LoadingState'
-import { WeatherInputForm } from './components/WeatherInputForm'
-import type { ConnectionStatus, PredictionResponse, WeatherObservation } from './types'
+import { LocationSearch } from './components/LocationSearch'
+import { WeatherScene } from './components/WeatherScene'
+import type {
+  ClimateNewsItem,
+  DailyForecast,
+  EnvironmentalInsights as EnvironmentalInsightsData,
+  Forecast,
+  HourlyForecast,
+  PredictionResponse,
+  WeatherLocation,
+  WeatherObservation,
+} from './types'
 import './App.css'
 
 const TemperatureChart = lazy(() =>
@@ -21,77 +33,114 @@ const RainProbabilityChart = lazy(() =>
   import('./components/RainProbabilityChart').then((module) => ({ default: module.RainProbabilityChart })),
 )
 
-function formatGeneratedAt(value: string): string {
-  return new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
+const DEFAULT_LOCATION: WeatherLocation = {
+  name: 'Bengaluru',
+  country: 'India',
+  latitude: 12.9716,
+  longitude: 77.5946,
+  timezone: 'Asia/Kolkata',
+}
+
+function formatGeneratedAt(value: string, timezone: string): string {
+  return new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: timezone }).format(new Date(value))
+}
+
+function liveForecasts(hourlyForecasts: HourlyForecast[]): Forecast[] {
+  return [1, 6, 12, 24].map((horizon) => {
+    const outlook = hourlyForecasts[Math.min(horizon - 1, hourlyForecasts.length - 1)]
+    return {
+      horizon_hours: horizon,
+      temperature_c: outlook.temperature,
+      rain_probability: outlook.precipitation_probability / 100,
+      rain_expected: outlook.precipitation_probability >= 50,
+      rainfall_mm: 0,
+    }
+  })
 }
 
 export function App() {
+  const [selectedLocation, setSelectedLocation] = useState<WeatherLocation>(DEFAULT_LOCATION)
   const [observations, setObservations] = useState<WeatherObservation[]>([])
+  const [dailyForecasts, setDailyForecasts] = useState<DailyForecast[]>([])
+  const [hourlyForecasts, setHourlyForecasts] = useState<HourlyForecast[]>([])
+  const [environment, setEnvironment] = useState<EnvironmentalInsightsData | null>(null)
+  const [news, setNews] = useState<ClimateNewsItem[]>([])
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null)
-  const [connection, setConnection] = useState<ConnectionStatus>('checking')
+  const [forecastMode, setForecastMode] = useState<'model' | 'live'>('model')
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStage, setLoadingStage] = useState<'history' | 'forecast'>('history')
-  const [source, setSource] = useState('')
   const [error, setError] = useState('')
+  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     const controller = new AbortController()
-    getHealth(controller.signal)
-      .then(() => setConnection('online'))
-      .catch(() => {
-        if (!controller.signal.aborted) setConnection('offline')
-      })
-    return () => controller.abort()
-  }, [])
-
-  async function predictWithHistory(history: WeatherObservation[], signal?: AbortSignal) {
-    setLoadingStage('forecast')
-    const response = await getPrediction(history, signal)
-    if (!response.forecasts.length) throw new Error('The backend returned an empty forecast.')
-    setPrediction(response)
-    setConnection('online')
-  }
-
-  async function loadWeatherHistory(signal?: AbortSignal) {
     setIsLoading(true)
     setLoadingStage('history')
     setError('')
-    try {
-      const response = await getObservations(signal)
-      setObservations(response.observations)
-      setSource(response.source)
-      await predictWithHistory(response.observations, signal)
-    } catch (requestError) {
-      if (signal?.aborted) return
-      setError(getApiErrorMessage(requestError))
-      setConnection(isBackendUnavailable(requestError) ? 'offline' : 'online')
-    } finally {
-      if (!signal?.aborted) setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    const controller = new AbortController()
-    void loadWeatherHistory(controller.signal)
-    return () => controller.abort()
-  }, [])
-
-  function loadDeveloperHistory(history: WeatherObservation[]) {
-    const sorted = [...history].sort((left, right) => Date.parse(left.timestamp) - Date.parse(right.timestamp))
-    setObservations(sorted)
+    setObservations([])
+    setDailyForecasts([])
+    setHourlyForecasts([])
+    setEnvironment(null)
+    setNews([])
     setPrediction(null)
-    setSource('Developer JSON')
-    setError('')
-    setIsLoading(true)
-    void predictWithHistory(sorted)
-      .catch((requestError: unknown) => {
-        setError(getApiErrorMessage(requestError))
-        setConnection(isBackendUnavailable(requestError) ? 'offline' : 'online')
-      })
-      .finally(() => setIsLoading(false))
-  }
+
+    async function loadWeather() {
+      try {
+        const response = await getObservations(selectedLocation, controller.signal)
+        if (controller.signal.aborted) return
+        setObservations(response.observations)
+        setDailyForecasts(response.daily_forecasts)
+        setHourlyForecasts(response.hourly_forecasts)
+
+        void getEnvironment(selectedLocation, controller.signal)
+          .then((environmentResponse) => {
+            if (!controller.signal.aborted) setEnvironment(environmentResponse)
+          })
+          .catch(() => {
+            if (!controller.signal.aborted) setEnvironment(null)
+          })
+        void getClimateNews(selectedLocation, controller.signal)
+          .then((newsResponse) => {
+            if (!controller.signal.aborted) setNews(newsResponse.articles)
+          })
+          .catch(() => {
+            if (!controller.signal.aborted) setNews([])
+          })
+
+        setLoadingStage('forecast')
+        if (response.model_supported) {
+          const modelForecast = await getPrediction(response.observations, controller.signal)
+          if (!modelForecast.forecasts.length) throw new Error('The backend returned an empty forecast.')
+          if (!controller.signal.aborted) {
+            setForecastMode('model')
+            setPrediction(modelForecast)
+          }
+        } else if (!controller.signal.aborted) {
+          setForecastMode('live')
+          setPrediction({
+            location: response.location,
+            generated_at: new Date().toISOString(),
+            forecasts: liveForecasts(response.hourly_forecasts),
+          })
+        }
+      } catch (requestError) {
+        if (!controller.signal.aborted) setError(getApiErrorMessage(requestError))
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false)
+      }
+    }
+
+    void loadWeather()
+    return () => controller.abort()
+  }, [reloadKey, selectedLocation])
 
   const currentObservation = observations.at(-1)
+  const displayLocation = [selectedLocation.name, selectedLocation.country].filter(Boolean).join(', ')
+  const forecastStatus = prediction
+    ? forecastMode === 'model'
+      ? `SkyCast AI forecast generated ${formatGeneratedAt(prediction.generated_at, selectedLocation.timezone)}`
+      : `Live Open-Meteo forecast for ${selectedLocation.name}`
+    : `Loading live weather for ${selectedLocation.name}`
 
   return (
     <div className="app-shell">
@@ -100,77 +149,88 @@ export function App() {
           <span className="brand-mark"><span /></span>
           <span>SkyCast <strong>AI</strong></span>
         </a>
-        <div className={`connection-status connection-${connection}`}>
-          <span />
-          {connection === 'checking' ? 'Checking backend' : connection === 'online' ? 'Backend connected' : 'Backend unavailable'}
-        </div>
+        <LocationSearch onSelect={setSelectedLocation} />
       </header>
 
       <main id="top">
         <section className="hero-section">
           <div>
-            <p className="eyebrow">Bengaluru · AI weather intelligence</p>
+            <p className="eyebrow">{displayLocation} · weather intelligence</p>
             <h1>Weather ahead,<br /><em>made clearer.</em></h1>
           </div>
           <div className="hero-summary">
-            <p>Short-range temperature and rainfall forecasts built from eleven years of Bengaluru weather patterns.</p>
-            <span>{prediction ? `Generated ${formatGeneratedAt(prediction.generated_at)}` : 'Loading live Bengaluru weather history'}</span>
+            <span>{forecastStatus}</span>
           </div>
         </section>
 
-        <section className="input-layout">
-          <WeatherInputForm
-            observation={currentObservation}
-            observationCount={observations.length}
-            isLoading={isLoading}
-            source={source}
-            onHistoryLoaded={loadDeveloperHistory}
-          />
+        <section className="weather-overview">
           {currentObservation ? (
-            <CurrentWeatherCard observation={currentObservation} />
+            <WeatherScene location={selectedLocation} observation={currentObservation} nextForecast={prediction?.forecasts[0]} />
           ) : (
-            <div className="panel weather-placeholder">Current conditions will appear after weather history loads.</div>
+            <div className="panel weather-placeholder">Live weather for {selectedLocation.name} will appear here shortly.</div>
           )}
         </section>
 
-        {error ? <ErrorMessage message={error} onDismiss={() => setError('')} onRetry={() => void loadWeatherHistory()} /> : null}
-        {isLoading ? (
-          <LoadingState
-            title={loadingStage === 'history' ? 'Loading Bengaluru weather history…' : 'Generating forecast'}
-            description={loadingStage === 'history' ? 'Fetching 169 contiguous hourly records from Open-Meteo.' : 'Running temperature and rain models across four horizons.'}
+        {!isLoading && prediction ? (
+          <ForecastConfidence
+            forecasts={prediction.forecasts}
+            observations={observations}
+            isModelForecast={forecastMode === 'model'}
           />
         ) : null}
 
-        {!isLoading && prediction ? (
+        {error ? <ErrorMessage message={error} onDismiss={() => setError('')} onRetry={() => setReloadKey((value) => value + 1)} /> : null}
+        {isLoading ? (
+          <LoadingState
+            title={loadingStage === 'history' ? `Loading ${selectedLocation.name} weather history…` : 'Generating forecast'}
+            description={loadingStage === 'history' ? 'Fetching recent, contiguous hourly observations from Open-Meteo.' : forecastMode === 'model' ? 'Running the Bangalore-trained temperature and rain models.' : 'Preparing the latest location-specific weather outlook.'}
+          />
+        ) : null}
+
+        {!isLoading && prediction && dailyForecasts.length ? (
           <section className="forecast-section" aria-live="polite">
+            {hourlyForecasts.length ? <HourlyForecastStrip forecasts={hourlyForecasts} location={selectedLocation} /> : null}
             <div className="forecast-title-row">
-              <div><p className="eyebrow">Model ensemble</p><h2>Forecast horizons</h2></div>
-              <span>{prediction.location} · {prediction.forecasts.length} predictions</span>
+              <div><p className="eyebrow">Daily weather</p><h2>Six-day outlook</h2></div>
+              <span>{selectedLocation.name} · Open-Meteo forecast</span>
             </div>
             <div className="forecast-grid">
-              {prediction.forecasts.map((forecast) => <ForecastCard key={forecast.horizon_hours} forecast={forecast} />)}
+              {dailyForecasts.map((forecast) => <ForecastCard forecast={forecast} key={forecast.date} timezone={selectedLocation.timezone} />)}
             </div>
             <div className="charts-grid">
               <Suspense fallback={<div className="chart-loading">Loading charts…</div>}>
-                <TemperatureChart forecasts={prediction.forecasts} />
-                <RainProbabilityChart forecasts={prediction.forecasts} />
+                <TemperatureChart forecasts={hourlyForecasts} timezone={selectedLocation.timezone} />
+                <RainProbabilityChart forecasts={hourlyForecasts} timezone={selectedLocation.timezone} />
               </Suspense>
             </div>
+            {environment ? <EnvironmentalInsights dailyForecast={dailyForecasts[0]} insight={environment} location={selectedLocation} news={news} /> : null}
           </section>
         ) : null}
 
-        {!isLoading && !prediction && !error ? (
+        {!isLoading && !dailyForecasts.length && !error ? (
           <section className="empty-state">
             <span className="empty-orbit"><span /></span>
-            <div><strong>Your forecast will appear here</strong><p>Live Bengaluru weather history is being loaded for an automatic four-horizon outlook.</p></div>
+            <div><strong>Your forecast will appear here</strong><p>Search for a city to load its live weather history and local outlook.</p></div>
           </section>
         ) : null}
       </main>
 
-      <footer>
-        <span>SkyCast AI · Bangalore</span>
-        <span>Temperature and rain forecasting research</span>
-        <span>Weather data provided by Open-Meteo.</span>
+      <footer className="site-footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <a className="footer-logo" href="#top">SkyCast <strong>AI</strong></a>
+            <p>Live weather intelligence for {displayLocation}.</p>
+          </div>
+          <div className="footer-information">
+            <span>Location-specific weather outlooks</span>
+            <span>{forecastMode === 'model' ? 'SkyCast AI model available for Bengaluru' : 'Live forecast data outside the Bangalore model domain'}</span>
+          </div>
+          <div className="footer-source">
+            <span className="source-status"><i /> Live data source</span>
+            <span>Weather data provided by Open-Meteo.</span>
+          </div>
+          <p className="footer-copyright">© 2026 SkyCast AI</p>
+        </div>
       </footer>
     </div>
   )

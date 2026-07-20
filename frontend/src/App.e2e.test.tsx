@@ -7,14 +7,12 @@ const describeLive = process.env.SKYCAST_E2E === '1' ? describe : describe.skip
 describeLive('SkyCast live integration', () => {
   it('loads live observations and displays API forecasts and charts', async () => {
     render(<App />)
-    expect(await screen.findByText('Backend connected')).toBeInTheDocument()
-    expect(await screen.findByText('169 hourly records loaded', {}, { timeout: 30_000 })).toBeInTheDocument()
-    expect(await screen.findByText('+1 hours', {}, { timeout: 45_000 })).toBeInTheDocument()
-    expect(screen.getByText('+24 hours')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Six-day outlook' }, { timeout: 45_000 })).toBeInTheDocument()
+    expect(screen.getAllByText('expected rainfall')).toHaveLength(6)
     await waitFor(
       () => {
         expect(screen.getByLabelText('Temperature prediction line chart')).toBeInTheDocument()
-        expect(screen.getByLabelText('Rain probability bar chart')).toBeInTheDocument()
+        expect(screen.getByLabelText('Rain probability line chart')).toBeInTheDocument()
       },
       { timeout: 10_000 },
     )

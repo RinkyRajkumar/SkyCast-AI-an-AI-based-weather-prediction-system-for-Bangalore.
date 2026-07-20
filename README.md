@@ -32,7 +32,7 @@ skycast-ai/
 └── requirements.txt         Data and model development dependencies
 ```
 
-The API imports `src.features.create_features`, so online inference uses the same lag, rolling and calendar calculations as training. On page load, the frontend calls `GET /api/observations`; FastAPI fetches and caches 169 live Bengaluru records from Open-Meteo, then the frontend sends only those records to `POST /predict`. Its API base URL is injected with `VITE_API_BASE_URL`.
+The API imports `src.features.create_features`, so Bengaluru inference uses the same lag, rolling and calendar calculations as training. On page load, the frontend fetches 169 live records from Open-Meteo. The location search is proxied through FastAPI; selecting a result refreshes every live panel with the selected coordinates and timezone. Bengaluru uses the trained SkyCast models, while other locations use clearly labelled Open-Meteo outlook data because the current trained artifacts are Bangalore-specific. Its API base URL is injected with `VITE_API_BASE_URL`.
 
 ## Features
 
@@ -42,7 +42,7 @@ The API imports `src.features.create_features`, so online inference uses the sam
 - Leakage-safe calendar, lag and past-only rolling features.
 - Temperature forecasts and rain probability/amount forecasts at 1h, 6h, 12h and 24h.
 - FastAPI validation, lazy model loading, liveness/readiness endpoints, clear 422/500/503 responses and configurable CORS.
-- Responsive React dashboard with automatic live Open-Meteo history loading, charts, loading/error/retry states, and an optional collapsed developer JSON override.
+- Responsive React dashboard with a pill-shaped location search, automatic live Open-Meteo history loading, location-aware charts/radar/sun and moon/environment/news panels, and loading/error/retry states.
 - Docker Compose, Render and Vercel configuration.
 
 ## Model results
@@ -111,7 +111,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. The dashboard automatically loads 169 contiguous Bengaluru records from Open-Meteo and generates the four forecasts. The optional **Developer tools** section contains the JSON upload override for local testing.
+Open `http://localhost:5173`. The dashboard automatically loads recent Bengaluru observations from Open-Meteo and generates four SkyCast horizons. Use the upper-right search field to load a different location; all live panels switch to that place and its local timezone.
 
 ## Verification
 
@@ -145,7 +145,10 @@ For a non-local API URL, set `VITE_API_BASE_URL` before building. For a differen
 | `GET /health` | Lightweight liveness check; remains available if model files are missing. |
 | `GET /health/ready` | Loads and verifies all 12 selected artifacts; returns 503 when unavailable. |
 | `GET /models` | Lists the selected temperature, classifier and rainfall artifacts. |
-| `GET /api/observations` | Fetches, validates and caches 169 recent Bengaluru Open-Meteo records for 60 minutes. |
+| `GET /api/locations?query=...` | Searches Open-Meteo's geocoding service for selectable locations. |
+| `GET /api/observations` | Fetches, validates and caches recent Open-Meteo records for the selected coordinates and timezone. |
+| `GET /api/environment` | Returns location-specific air quality, dust, and UV conditions. |
+| `GET /api/climate-news` | Returns cached climate and weather topics for the selected location. |
 | `POST /predict` | Returns four temperature, rain probability and rainfall forecasts. |
 
 Prediction requests require at least 169 unique, contiguous hourly observations. Naive timestamps are treated as `Asia/Kolkata`; offset-aware values are converted to it.
@@ -199,7 +202,7 @@ Render supplies `PORT`; the container binds Uvicorn to `0.0.0.0` on that value. 
 
 ## Project demo and screenshots
 
-The demo path is deliberately short: start both services and open the dashboard. It fetches a recent 169-hour Open-Meteo history, displays the latest conditions, and automatically generates the four forecast horizons. The dashboard shows forecast cards, a temperature line chart and a rain-probability bar chart.
+The demo path is deliberately short: start both services and open the dashboard. It fetches recent Open-Meteo history, displays the latest conditions, and automatically renders the location-specific outlook. Use the search field in the upper-right corner to switch cities; all dashboard panels, charts, radar, environmental readings, sunrise/sunset details, and news refresh for the selected place.
 
 Screenshot slots are reserved in `docs/screenshots/README.md` for:
 
@@ -219,6 +222,7 @@ No credentials are required by the application. Keep local `.env` files out of G
 - The deployment cannot make predictions until the selected model artifacts are delivered to the backend image or mounted model directory.
 - Three selected Random Forest temperature files make the production artifact set roughly 198 MB and increase cold-start memory/time.
 - Open-Meteo data is cached for 60 minutes, so it is not minute-by-minute live weather.
+- The trained SkyCast temperature and rain artifacts are calibrated only for Bengaluru. Other searched locations intentionally use Open-Meteo live outlook data instead of an invalid model inference.
 - Rainfall amount accuracy is modest, especially at longer horizons.
 - There is no authentication, rate limiting, persistent request storage or automated retraining.
 - This is a research demonstration, not a source for safety-critical weather decisions.
